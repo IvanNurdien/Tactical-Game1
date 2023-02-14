@@ -18,6 +18,8 @@ public class BattleSystem : MonoBehaviour
     public BattleState state;
     public GameObject turnIndicator;
 
+    public GameObject selectedChar;
+
     [SerializeField] TeleportOBJ areaTp;
     // Start is called before the first frame update
     void Start()
@@ -82,9 +84,6 @@ public class BattleSystem : MonoBehaviour
         areaTp.MoveArea();
         turnIndicator.SetActive(false);
         Debug.Log("Giliran Player woi"); 
-
-        
-        
     }
 
     public void OnAttackButton ()
@@ -98,6 +97,11 @@ public class BattleSystem : MonoBehaviour
     }
     public void OnMoveButton()
     {
+        selectedChar.GetComponent<MovementScript>().enabled = true;
+    }
 
+    public void CharacterSelected()
+    {
+        Debug.Log("Character " + selectedChar.gameObject.name + " is selected");
     }
 }
