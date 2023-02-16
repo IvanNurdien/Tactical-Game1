@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b098aec6eccc4dbe726d909d8d0c3, type: 3}
   m_Name: Mage
   m_EditorClassIdentifier: 
+  characterPrefab: {fileID: 7104701114276910524, guid: c56f5273bd4b7ca4c8535a0b651f289a,
+    type: 3}
   Description: Dukun merupakan mage dengan keterampilan santet dari jarak jauh
   UnitName: Dukun
+  unitNumber: 1002
   damage: 50
   maxHP: 50
   currentHp: 50

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DataCharacter;
 
 public enum BattleState { START,PLAYERTUURN,ENEMYTURN,WON,LOST}
 public class BattleSystem : MonoBehaviour

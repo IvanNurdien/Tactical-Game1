@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DataCharacter
-{
+/*namespace DataCharacter
+{*/
     // scriptable sctipt character
     [CreateAssetMenu(fileName = "CharacterData",
         menuName = "Character(s)/AddNewCharacter", order = 1)]
     public class Unit : ScriptableObject
     {
-        GameObject characterPrefab;
-        [TextArea(20, 40)]
+        public GameObject characterPrefab;
+        [TextArea(1, 3)]
         public string Description;
         public string UnitName;
+        public int unitNumber;
         public int damage;
         public int maxHP;
         public int currentHp;
@@ -27,4 +28,4 @@ namespace DataCharacter
                 return false;
         }
     }
-}
+//}

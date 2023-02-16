@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b098aec6eccc4dbe726d909d8d0c3, type: 3}
   m_Name: Fighter
   m_EditorClassIdentifier: 
+  characterPrefab: {fileID: 7355553015495370718, guid: 6e19def8d298299418dbe6a9ae08dd91,
+    type: 3}
   Description: shiro oni merupakan pembantai yang tak terkalahkan
   UnitName: shiro oni
+  unitNumber: 1001
   damage: 100
   maxHP: 100
   currentHp: 100

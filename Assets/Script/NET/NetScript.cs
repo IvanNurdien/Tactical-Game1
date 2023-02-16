@@ -1,27 +1,31 @@
  using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class NetScript : MonoBehaviour
+public class NetScript : MonoBehaviourPunCallbacks
 {
     public PhotonView playerPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        //conecting
+        //connecting
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
     }
-    public void OnConnectedToMaster()
+
+    public override void OnConnectedToMaster()
     {
         //kita terhubung
         Debug.Log("konek ke master");
-        PhotonNetwork.JoinRandomOrCreateRoom();
+        PhotonNetwork.JoinLobby();
     }
-    public  void OnJoinedRoom()
+
+    public override void OnJoinedLobby()
     {
         Debug.Log("join sukses");
-        PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+        SceneManager.LoadScene("Lobby");
 
     }
 }
