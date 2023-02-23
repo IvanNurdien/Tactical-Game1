@@ -13,24 +13,24 @@ public class PlayerItem : MonoBehaviourPunCallbacks
     [Header("First Unit")]
     public int firstUnit;
     public TMP_Text firstUnitName;
-    Button firstUnitButton;
+    GameObject firstUnitButton;
 
     [Header("Second Unit")]
     public int secondUnit;
     public TMP_Text secondUnitName;
-    Button secondUnitButton;
+    GameObject secondUnitButton;
 
 
     [Header("Third Unit")]
     public int thirdUnit;
     public TMP_Text thirdUnitName;
-    Button thirdUnitButton;
+    GameObject thirdUnitButton;
 
 
     [Header("Fourth Unit")]
     public int fourthUnit;
     public TMP_Text fourthUnitName;
-    Button fourthUnitButton;
+    GameObject fourthUnitButton;
 
 
     [Header("Initialize Player")]
@@ -44,30 +44,31 @@ public class PlayerItem : MonoBehaviourPunCallbacks
         UpdatePlayerItem(thisPlayer);
     }
 
-    public void ApplyLocalChanges(Unit units)
+    public void ApplyLocalChanges(Unit units, GameObject button)
     {
         if (firstUnit == 0)
         {
             playerProperties["firstUnit"] = units.unitNumber;
             playerProperties["firstUnitName"] = units.name;
-            
+            firstUnitButton = button;
 
         } else if (secondUnit == 0)
         {
             playerProperties["secondUnit"] = units.unitNumber;
             playerProperties["secondUnitName"] = units.name;
+            secondUnitButton = button;
             
         } else if (thirdUnit == 0)
         {
             playerProperties["thirdUnit"] = units.unitNumber;
             playerProperties["thirdUnitName"] = units.name;
-            
+            thirdUnitButton = button;
         }
         else
         {
             playerProperties["fourthUnit"] = units.unitNumber;
             playerProperties["fourthUnitName"] = units.name;
-            
+            fourthUnitButton = button;
         }
         
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
@@ -79,19 +80,34 @@ public class PlayerItem : MonoBehaviourPunCallbacks
         {
             playerProperties["fourthUnit"] = 0;
             playerProperties["fourthUnitName"] = "";
+            fourthUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            fourthUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            fourthUnitButton = null;
+
         } else if (thirdUnit != 0)
         {
             playerProperties["thirdUnit"] = 0;
             playerProperties["thirdUnitName"] = "";
+            thirdUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            thirdUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            thirdUnitButton = null;
+
         } else if (secondUnit != 0)
         {
             playerProperties["secondUnit"] = 0;
             playerProperties["secondUnitName"] = "";
+            secondUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            secondUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            secondUnitButton = null;
+
         }
         else
         {
             playerProperties["firstUnit"] = 0;
             playerProperties["firstUnitName"] = "";
+            firstUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            firstUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            firstUnitButton = null;
         }
 
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);

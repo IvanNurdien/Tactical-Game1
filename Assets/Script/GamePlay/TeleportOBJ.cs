@@ -8,9 +8,13 @@ public class TeleportOBJ : MonoBehaviour
     public GameObject theArea;
     public float timeLeft;
     public float timeCD;
-
+    public static TeleportOBJ insTp;
     private void Awake()
     {
+        if (insTp == null)
+            insTp = this;
+        else if (insTp != this)
+            Destroy(gameObject);
         timeLeft = timeCD;
     }
 
@@ -19,7 +23,7 @@ public class TeleportOBJ : MonoBehaviour
         theArea.transform.position = teleportTarget.transform.position;
     }
 
-    /*private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         //TheArea.transform.position = teleportTarget.transform.position;
     }
@@ -28,7 +32,7 @@ public class TeleportOBJ : MonoBehaviour
     {
         if (other.GetComponent<CapsuleCollider>())
         {
-            TheArea.transform.position = teleportTarget.transform.position;
+             theArea.transform.position = teleportTarget.transform.position;
         }
-    }*/
+    }
 }

@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 1611173882321457920}
   - component: {fileID: 1611173882335543854}
   - component: {fileID: 1611173882335543850}
+  - component: {fileID: 4898066610686131522}
   - component: {fileID: 1611173882335543853}
   - component: {fileID: 1611173882335543852}
   - component: {fileID: 1611173882335543855}
@@ -345,6 +346,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.87, z: 0}
+--- !u!114 &4898066610686131522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611173882321948448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e671270da02c848b0bc760402e8058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animasi: {fileID: 0}
 --- !u!114 &1611173882335543853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +374,8 @@ MonoBehaviour:
   charController: {fileID: 1611173882335543850}
   movementSpeed: 10
   rotationSpeed: 180
-  ins: {fileID: 1611173882335543853}
+  areaTp: {fileID: 0}
+  canAttack: 1
 --- !u!114 &1611173882335543852
 MonoBehaviour:
   m_ObjectHideFlags: 0

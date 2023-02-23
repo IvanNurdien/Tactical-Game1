@@ -19,14 +19,20 @@ public class UnitButton : MonoBehaviour
         buttonText.text = units.UnitName;
     }
 
-    public void SelectedByOtherPlayer()
+    public void SelectedByOtherPlayer(bool isSelected)
     {
-        PV.RPC("RPC_CharSelectedByOtherPlayer", RpcTarget.OthersBuffered);
+        PV.RPC("RPC_CharSelectedByOtherPlayer", RpcTarget.OthersBuffered, isSelected);
     }
 
     [PunRPC]
-    void RPC_CharSelectedByOtherPlayer()
+    void RPC_CharSelectedByOtherPlayer(bool isSelected)
     {
-       transform.Find("Player2Chosen").gameObject.SetActive(true);
+        if (isSelected)
+        {
+            transform.Find("Player2Chosen").gameObject.SetActive(true);
+        } else
+        {
+            transform.Find("Player2Chosen").gameObject.SetActive(false);
+        }
     }
 }

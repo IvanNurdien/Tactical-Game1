@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum BattleState { START,PLAYERTUURN,ENEMYTURN,WON,LOST}
 public class BattleSystem : MonoBehaviour
@@ -12,31 +13,42 @@ public class BattleSystem : MonoBehaviour
     public Transform enemyBattlestation;
     public BattleHUD playerHUD;
     public BattleHUD enemyHUD;*/
+    public GameObject en;
     Unit playerUnit;
     Unit enemyUnit;
     public BattleState state;
     public GameObject turnIndicator;
-
+    public static BattleSystem insBatSy;
     public GameObject selectedChar;
-
-    [SerializeField] TeleportOBJ areaTp;
+    public Animasi anim;
+    public float turnTimeLimit = 10f; // batas waktu satu giliran
+    private float turnTimer; // timer untuk menghitung waktu satu giliran
+    public GameObject panelPlayer;
+    public GameObject panelEnemy;
     // Start is called before the first frame update
     void Start()
     {
         state = BattleState.START;
         StartCoroutine(SetUpBattle());
+        turnTimer = turnTimeLimit;
+        panelPlayer.SetActive(true);
+        panelEnemy.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (state == BattleState.PLAYERTUURN)
         {
-            if (Input.GetKey(KeyCode.Space))
+            turnTimer = turnTimeLimit;
+            if (turnTimer <= 0) // jika waktunya abis pindah ke lawan.
             {
-                OnAttackButton();
+                state = BattleState.ENEMYTURN;
+                EnemyTurn();
             }
         }
+        
     }
     IEnumerator SetUpBattle()
     {
@@ -56,8 +68,8 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerAttack()
     {
         yield return new WaitForSeconds(2f);
-
-        areaTp.theArea.SetActive(false);
+        Debug.Log("musuh genten cok");
+        panelPlayer.SetActive(false);
         state = BattleState.ENEMYTURN;
         StartCoroutine(EnemyTurn());
         
@@ -67,22 +79,24 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("Giliran musuh woi");
         turnIndicator.SetActive(true);
-
-        yield return new WaitForSeconds(2f);
+        panelEnemy.SetActive(true);
+        yield return new WaitForSeconds(3f);
 
         Debug.Log("Musuh ngapain kek");
 
-        yield return new WaitForSeconds(1f);
-
+        yield return new WaitForSeconds(2f);
+        panelPlayer.SetActive(true);
+        panelEnemy.SetActive(false);
         state = BattleState.PLAYERTUURN;
         PlayerTurn();
     }
     void PlayerTurn()
     {
-        areaTp.theArea.SetActive(true);
-        areaTp.MoveArea();
+        Debug.Log("Giliran Player woi");
+
+        anim.AttackAnim();
+
         turnIndicator.SetActive(false);
-        Debug.Log("Giliran Player woi"); 
     }
 
     public void OnAttackButton ()
@@ -90,17 +104,22 @@ public class BattleSystem : MonoBehaviour
         if (state != BattleState.PLAYERTUURN)
             
             return;
-
+        en.SetActive(false);
+        
         StartCoroutine(PlayerAttack());
         Debug.Log("playerAttack");
+        EnemyTurn();    
+        
     }
-    public void OnMoveButton()
-    {
-        selectedChar.GetComponent<MovementScript>().enabled = true;
-    }
+    
 
     public void CharacterSelected()
     {
         Debug.Log("Character " + selectedChar.gameObject.name + " is selected");
+    }
+    public void EndTurn()
+    {
+        Debug.Log("End Turn");
+        StartCoroutine(PlayerAttack());
     }
 }

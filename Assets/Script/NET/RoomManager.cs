@@ -61,13 +61,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             if (item.thisPlayer == PhotonNetwork.LocalPlayer)
             {
-                item.ApplyLocalChanges(units);
                 GameObject button = EventSystem.current.currentSelectedGameObject.gameObject;
+                item.ApplyLocalChanges(units, button);
                 PhotonView buttonPV = button.GetComponent<PhotonView>();
                 int buttonID = button.GetComponent<UnitButton>().units.unitNumber;
 
                 button.transform.Find("Player1Chosen").gameObject.SetActive(true);
-                button.GetComponent<UnitButton>().SelectedByOtherPlayer();
+                button.GetComponent<UnitButton>().SelectedByOtherPlayer(true);
             }
         }
     }

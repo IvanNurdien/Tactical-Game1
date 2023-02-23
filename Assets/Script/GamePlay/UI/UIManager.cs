@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject PanelMenu;
     public void Update()
     {
-        PanelMenu.SetActive(false);
+
     }
     public void Start()
     {
