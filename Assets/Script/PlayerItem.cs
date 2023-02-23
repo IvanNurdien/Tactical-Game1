@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class PlayerItem : MonoBehaviourPunCallbacks
 {
-    public TMP_Text unitName;
 
     [Header("First Unit")]
     public int firstUnit;

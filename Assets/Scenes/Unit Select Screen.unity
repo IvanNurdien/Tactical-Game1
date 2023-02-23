@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &61365618
 RectTransform:
   m_ObjectHideFlags: 0
@@ -513,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &148801644
 RectTransform:
   m_ObjectHideFlags: 0
@@ -968,7 +968,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &809105728
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1105,7 +1105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &963723262
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1363,6 +1363,7 @@ GameObject:
   - component: {fileID: 1112467177}
   - component: {fileID: 1112467176}
   - component: {fileID: 1112467179}
+  - component: {fileID: 1112467180}
   m_Layer: 5
   m_Name: Unit 1
   m_TagString: Untagged
@@ -1501,6 +1502,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   units: {fileID: 11400000, guid: 6f23aea98cd41fd4ea11f9bdea45e4ec, type: 2}
+--- !u!114 &1112467180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112467174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1350190449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,7 +1760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1848572016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1868,6 +1891,7 @@ GameObject:
   - component: {fileID: 1883981167}
   - component: {fileID: 1883981166}
   - component: {fileID: 1883981165}
+  - component: {fileID: 1883981169}
   m_Layer: 5
   m_Name: Unit 2
   m_TagString: Untagged
@@ -2006,6 +2030,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1883981163}
   m_CullTransparentMesh: 1
+--- !u!114 &1883981169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883981163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1914012840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,7 +2069,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1914012841
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2156,6 +2202,7 @@ GameObject:
   - component: {fileID: 1961749517}
   - component: {fileID: 1961749516}
   - component: {fileID: 1961749515}
+  - component: {fileID: 1961749519}
   m_Layer: 5
   m_Name: Unit 3
   m_TagString: Untagged
@@ -2294,6 +2341,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1961749513}
   m_CullTransparentMesh: 1
+--- !u!114 &1961749519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961749513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 4
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2112856893
 GameObject:
   m_ObjectHideFlags: 0
@@ -2342,3 +2411,7 @@ MonoBehaviour:
   playerItemPrefab: {fileID: -4842359361312387800, guid: 447924983dc10ad4da49962c3da83ad7,
     type: 3}
   playerItemParent: {fileID: 95260788}
+  unitButtons:
+  - {fileID: 1112467174}
+  - {fileID: 1883981163}
+  - {fileID: 1961749513}

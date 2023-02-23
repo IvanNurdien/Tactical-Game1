@@ -40,6 +40,8 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - SetIDPlayer
+  - CharSelectedByOtherPlayer
+  - RPC_CharSelectedByOtherPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -10,6 +11,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public List<PlayerItem> playerItemsList = new List<PlayerItem>();
     public PlayerItem playerItemPrefab;
     public Transform playerItemParent;
+
+    public List<GameObject> unitButtons;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,10 +62,28 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if (item.thisPlayer == PhotonNetwork.LocalPlayer)
             {
                 item.ApplyLocalChanges(units);
+                GameObject button = EventSystem.current.currentSelectedGameObject.gameObject;
+                PhotonView buttonPV = button.GetComponent<PhotonView>();
+                int buttonID = button.GetComponent<UnitButton>().units.unitNumber;
 
+                button.transform.Find("Player1Chosen").gameObject.SetActive(true);
+                button.GetComponent<UnitButton>().SelectedByOtherPlayer();
             }
         }
     }
+
+    /*[PunRPC]
+    void RPC_CharSelectedByOtherPlayer(int buttonID)
+    {
+        foreach(GameObject button in unitButtons)
+        {
+            if (button.GetComponent<UnitButton>().units.unitNumber == buttonID)
+            {
+                button.transform.Find("Player2Chosen").gameObject.SetActive(true);
+                
+            }
+        }
+    }*/
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
