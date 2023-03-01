@@ -10,9 +10,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     public List<PlayerItem> playerItemsList = new List<PlayerItem>();
     public PlayerItem playerItemPrefab;
-    public Transform playerItemParent;
+    public Transform player1Position;
+    public Transform player2Position;
+    public GameObject startButton;
+
+    public bool player1Ready;
+    public bool player2Ready;
 
     public List<GameObject> unitButtons;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,8 +38,21 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 }
             }
         }
+
+        /*if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            if (player1Ready && player2Ready)
+            {
+                startButton.SetActive(true);
+            }
+            else
+            {
+                startButton.SetActive(false);
+            }
+        }*/
     }
 
+    // UPDATE PLAYER IN ROOM
     void UpdatePlayerList()
     {
         foreach (PlayerItem item in playerItemsList)
@@ -49,12 +68,21 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
         {
-            PlayerItem newPlayerItem = Instantiate(playerItemPrefab, playerItemParent);
-            newPlayerItem.SetPlayerInfo(player.Value);
-            playerItemsList.Add(newPlayerItem);
+            if (player.Value == PhotonNetwork.MasterClient)
+            {
+                PlayerItem newPlayerItem = Instantiate(playerItemPrefab, player1Position);
+                newPlayerItem.SetPlayerInfo(player.Value);
+                playerItemsList.Add(newPlayerItem);
+            } else
+            {
+                PlayerItem newPlayerItem = Instantiate(playerItemPrefab, player2Position);
+                newPlayerItem.SetPlayerInfo(player.Value);
+                playerItemsList.Add(newPlayerItem);
+            }
         }
     }
 
+    // TO SHOW PLAYER SYMBOL ON UNIT BUTTON
     public void SelectedUnit(Unit units)
     {
         foreach(PlayerItem item in playerItemsList)
@@ -72,18 +100,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    /*[PunRPC]
-    void RPC_CharSelectedByOtherPlayer(int buttonID)
+    public void OnClickPlay()
     {
-        foreach(GameObject button in unitButtons)
-        {
-            if (button.GetComponent<UnitButton>().units.unitNumber == buttonID)
-            {
-                button.transform.Find("Player2Chosen").gameObject.SetActive(true);
-                
-            }
-        }
-    }*/
+        PhotonNetwork.LoadLevel("Gameplay");
+    }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

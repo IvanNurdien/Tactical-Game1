@@ -42,6 +42,7 @@ MonoBehaviour:
   - SetIDPlayer
   - CharSelectedByOtherPlayer
   - RPC_CharSelectedByOtherPlayer
+  - RPC_SwitchTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

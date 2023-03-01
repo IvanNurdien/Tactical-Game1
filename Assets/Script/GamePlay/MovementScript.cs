@@ -23,7 +23,7 @@ public class MovementScript : MonoBehaviour
         if (insMov == null)
             insMov = this;
         else if (insMov != this)
-            Destroy(gameObject);
+            Debug.Log("bruh this is the cause of the missing child");
     }
     // Start is called before the first frame update
     void Start()

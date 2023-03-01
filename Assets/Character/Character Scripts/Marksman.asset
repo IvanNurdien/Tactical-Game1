@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b098aec6eccc4dbe726d909d8d0c3, type: 3}
   m_Name: Marksman
   m_EditorClassIdentifier: 
-  characterPrefab: {fileID: 0}
+  characterPrefab: {fileID: 7104701114276910524, guid: 198c42b927d37d84fb02a041eb41f5e0,
+    type: 3}
   Description: joni
   UnitName: Joko Tni
   unitNumber: 1003
