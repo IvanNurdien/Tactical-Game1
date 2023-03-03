@@ -7,8 +7,14 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    public List<GameObject> controlledUnits;
+
     public bool thisTurn;
     public Player thisPlayer;
+
+    public GameObject selectedUnit;
+    [SerializeField] GameObject battleMenu;
+
     public TMP_Text testText;
     public TMP_Text myTurn;
 
@@ -36,8 +42,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TestUpdate(int playerNumber)
+    public void unitSelected(GameObject selectedUnit_)
     {
-        testText.text = "I Am Player " + playerNumber;
+        if (selectedUnit_ != null)
+        {
+            PhotonView unitView = selectedUnit_.GetComponentInParent<PhotonView>();
+            if (unitView.IsMine)
+            {
+                selectedUnit = selectedUnit_;
+                battleMenu.SetActive(true);
+            }
+        }
+        else
+        {
+            selectedUnit = null;
+            battleMenu.SetActive(false);
+        }
     }
 }

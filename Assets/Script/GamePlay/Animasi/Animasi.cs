@@ -37,4 +37,12 @@ public class Animasi : MonoBehaviour
     {
         animasi.SetTrigger("isAttack");
     }
+    void PamungkasAnim()
+    {
+        animasi.SetTrigger("isPamungkas");
+    }
+    void OnDamage()
+    {
+        animasi.SetTrigger("isOnDAmage");
+    }
 }

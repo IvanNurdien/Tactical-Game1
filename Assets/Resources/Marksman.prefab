@@ -419,7 +419,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1814015164998773381}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.71, y: -0.77027816, z: 21.881191}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1059,6 +1059,7 @@ GameObject:
   - component: {fileID: 8564525759134158584}
   - component: {fileID: 8007467726303380675}
   - component: {fileID: 8522989560352773682}
+  - component: {fileID: 2223423692793325876}
   m_Layer: 0
   m_Name: Apani
   m_TagString: Player 1
@@ -1219,6 +1220,19 @@ MonoBehaviour:
   rotationSpeed: 180
   areaTp: {fileID: 0}
   canAttack: 1
+--- !u!114 &2223423692793325876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071394262790752772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 544954e10ffb4ee41bac690d684439b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: 
 --- !u!1 &4293262457308267980
 GameObject:
   m_ObjectHideFlags: 0

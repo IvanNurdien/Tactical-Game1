@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,10 +10,13 @@ public class SelectCharacter : MonoBehaviour
 
     public string playerTag;
 
+    PhotonView view;
+
     
     // Start is called before the first frame update
     void Start()
     {
+        view = GetComponentInParent<PhotonView>();
         renderer = GetComponent<Renderer>();
 
         playerTag = this.gameObject.tag;
@@ -31,13 +35,16 @@ public class SelectCharacter : MonoBehaviour
     // Detect Mouse by changing color
     private void OnMouseEnter()
     {
-        if (playerTag == "Player 1")
+        if (view.IsMine)
         {
-            renderer.material.color = Color.blue;
-        }
-        else
-        {
-            renderer.material.color = Color.red;
+            if (playerTag == "Player 1")
+            {
+                renderer.material.color = Color.blue;
+            }
+            else
+            {
+                renderer.material.color = Color.red;
+            }
         }
     }
 

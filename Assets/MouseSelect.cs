@@ -7,13 +7,14 @@ using UnityEngine;
 public enum PLAYERSELECT {PLAYER_1, PLAYER_2}
 public class MouseSelect : MonoBehaviour
 {
-    private BattleSystem battleSystem;
+    private PlayerController pc;
 
     public Camera camera;
     // Start is called before the first frame update
     void Start()
     {
-        battleSystem = GameObject.Find("/Battlehandller").GetComponent<BattleSystem>();
+        pc = GetComponent<PlayerController>();
+        camera = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -27,16 +28,15 @@ public class MouseSelect : MonoBehaviour
             {
                 if (hitInfo.collider.gameObject.GetComponent<SelectCharacter>() != null)
                 {
-                    battleSystem.selectedChar = hitInfo.collider.gameObject;
-                    battleSystem.CharacterSelected();
+                    pc.unitSelected(hitInfo.collider.gameObject);
                 } else
                 {
-                    battleSystem.selectedChar = null;
+                    pc.unitSelected(null);
                 }
             }
             else
             {
-                battleSystem.selectedChar = null;
+                pc.unitSelected(null);
             }
         }
     }

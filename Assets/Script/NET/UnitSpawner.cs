@@ -25,19 +25,11 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnUnits(player1Spawn);
-        }
-        else
-        {
-            SpawnUnits(player2Spawn);
-        }
+        UpdatePlayerList();
     }
 
-    public void SpawnUnits(GameObject playerSpawn)
+    public void SpawnUnits(GameObject playerSpawn, PlayerController pc)
     {
-        UpdatePlayerList();
         firstUnitSpawn = playerSpawn.transform.Find("Unit 1");
         secondUnitSpawn = playerSpawn.transform.Find("Unit 2");
         thirdUnitSpawn = playerSpawn.transform.Find("Unit 3");
@@ -47,7 +39,8 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["firstUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
-                PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
+                GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
+                pc.controlledUnits.Add(spawnedUnit);
             }
         }
         foreach (var unit in unitList)
@@ -55,7 +48,8 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["secondUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
-                PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
+                GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
+                pc.controlledUnits.Add(spawnedUnit);
             }
         }
         foreach (var unit in unitList)
@@ -63,7 +57,8 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["thirdUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
-                PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
+                GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
+                pc.controlledUnits.Add(spawnedUnit);
             }
         }
     }
@@ -87,12 +82,14 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 PlayerController newPlayerItem = Instantiate(playerControllerPrefab, pcSpawnOne);
                 newPlayerItem.SetPlayerInfo(player.Value);
+                SpawnUnits(player1Spawn, newPlayerItem);
                 bd.playerList.Add(newPlayerItem);
             }
             else
             {
                 PlayerController newPlayerItem = Instantiate(playerControllerPrefab, pcSpawnTwo);
                 newPlayerItem.SetPlayerInfo(player.Value);
+                SpawnUnits(player2Spawn, newPlayerItem);
                 bd.playerList.Add(newPlayerItem);
             }
             

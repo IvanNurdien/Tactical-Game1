@@ -24,12 +24,10 @@ public class BattleDirector : MonoBehaviour
             if (player.thisPlayer == PhotonNetwork.MasterClient)
             {
                 playerOne = player;
-                player.TestUpdate(1);
             }
             else
             {
                 playerTwo = player;
-                player.TestUpdate(2);
 
             }
         }
