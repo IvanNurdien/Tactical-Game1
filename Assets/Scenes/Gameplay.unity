@@ -2176,8 +2176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveBtn: {fileID: 864062850}
-  AttacBtn: {fileID: 0}
-  SpecialBtn: {fileID: 0}
+  AttacBtn: {fileID: 2134502305}
+  SpecialBtn: {fileID: 1832269820}
   characterUnit: {fileID: 0}
 --- !u!1 &702605542
 GameObject:
