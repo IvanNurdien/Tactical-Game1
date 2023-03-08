@@ -592,7 +592,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1452026247}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3834042176523384100}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: MoveUnit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1638923261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,6 +1145,7 @@ GameObject:
   - component: {fileID: 3834042176523384102}
   - component: {fileID: 3834042176523384100}
   - component: {fileID: -4122454947399598183}
+  - component: {fileID: 130278980951645066}
   m_Layer: 5
   m_Name: PlayerController
   m_TagString: Untagged
@@ -1161,7 +1174,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 317.38245, y: 158.39108}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 634.756, y: 316.375}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3834042176523384103
@@ -1214,6 +1227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02bd441987fcbf4a9f09eeec0d7a97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlledUnits: []
+  bd: {fileID: 0}
+  view: {fileID: 0}
   thisTurn: 0
   selectedUnit: {fileID: 0}
   battleMenu: {fileID: 1003850995}
@@ -1232,6 +1248,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
+--- !u!114 &130278980951645066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3834042176523384096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3834042177331046264
 GameObject:
   m_ObjectHideFlags: 0

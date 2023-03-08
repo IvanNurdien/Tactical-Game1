@@ -12,6 +12,8 @@ public class SelectCharacter : MonoBehaviour
 
     PhotonView view;
 
+    public bool isPlayed = false;
+
     
     // Start is called before the first frame update
     void Start()
@@ -37,14 +39,17 @@ public class SelectCharacter : MonoBehaviour
     {
         if (view.IsMine)
         {
-            if (playerTag == "Player 1")
+            if (isPlayed)
+            {
+                renderer.material.color = Color.yellow;
+            } else
             {
                 renderer.material.color = Color.blue;
             }
-            else
-            {
-                renderer.material.color = Color.red;
-            }
+            
+        } else
+        {
+            renderer.material.color = Color.red;
         }
     }
 

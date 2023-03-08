@@ -14,7 +14,7 @@ public class ActionUI : MonoBehaviour
     {
         MoveBtn.onClick.AddListener(() =>
         {
-            characterUnit.GetComponent<MovementScript>().ActionSwitch(ActionType.Move);
+            characterUnit.GetComponent<MovementScript>().ActionSwitch(ActionType.Move, null);
 
         });
     }

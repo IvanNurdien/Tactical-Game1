@@ -40,7 +40,7 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(spawnedUnit);
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
             }
         }
         foreach (var unit in unitList)
@@ -49,7 +49,7 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(spawnedUnit);
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
             }
         }
         foreach (var unit in unitList)
@@ -58,14 +58,14 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(spawnedUnit);
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
             }
         }
     }
 
     void UpdatePlayerList()
     {
-        foreach (PlayerController item in bd.playerList)
+        /*foreach (PlayerController item in bd.playerList)
         {
             Destroy(item.gameObject);
         }
@@ -77,23 +77,27 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
         }
 
         foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
-        {
-            if (player.Value == PhotonNetwork.MasterClient)
+        {*/
+            if (PhotonNetwork.IsMasterClient)
             {
-                PlayerController newPlayerItem = Instantiate(playerControllerPrefab, pcSpawnOne);
-                newPlayerItem.SetPlayerInfo(player.Value);
+                PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0,0,0), Quaternion.identity).GetComponent<PlayerController>();
+                //newPlayerItem.SetPlayerInfo(player.Value);
+                newPlayerItem.transform.SetParent(pcSpawnOne);
+                newPlayerItem.transform.localScale = new Vector3(1, 1, 1);
+                newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
                 SpawnUnits(player1Spawn, newPlayerItem);
                 bd.playerList.Add(newPlayerItem);
-            }
-            else
+            } else
             {
-                PlayerController newPlayerItem = Instantiate(playerControllerPrefab, pcSpawnTwo);
-                newPlayerItem.SetPlayerInfo(player.Value);
+                PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<PlayerController>();
+                //newPlayerItem.SetPlayerInfo(player.Value);
+                newPlayerItem.transform.SetParent(pcSpawnTwo);
+                newPlayerItem.transform.localScale = new Vector3(1,1,1);
+                newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
                 SpawnUnits(player2Spawn, newPlayerItem);
                 bd.playerList.Add(newPlayerItem);
             }
-            
-        }
+        //}
     }
 
     // Update is called once per frame
@@ -101,7 +105,7 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
     {
         
     }
-
+/*
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdatePlayerList();
@@ -113,5 +117,5 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
         UpdatePlayerList();
         Debug.Log("Ada yang keluar nih");
 
-    }
+    }*/
 }

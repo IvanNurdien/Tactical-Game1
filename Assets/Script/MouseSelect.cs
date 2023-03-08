@@ -22,22 +22,31 @@ public class MouseSelect : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            if (!PointerOverUI())
             {
-                if (hitInfo.collider.gameObject.GetComponent<SelectCharacter>() != null)
+                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hitInfo))
                 {
-                    pc.unitSelected(hitInfo.collider.gameObject);
-                } else
+                    if (hitInfo.collider.gameObject.GetComponent<SelectCharacter>() != null)
+                    {
+                        pc.unitSelected(hitInfo.collider.gameObject);
+                    }
+                    else
+                    {
+                        pc.unitSelected(null);
+                    }
+                }
+                else
                 {
                     pc.unitSelected(null);
                 }
             }
-            else
-            {
-                pc.unitSelected(null);
-            }
         }
+    }
+
+    public bool PointerOverUI()
+    {
+        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
     }
 }

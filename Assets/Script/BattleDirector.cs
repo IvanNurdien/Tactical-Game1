@@ -28,7 +28,6 @@ public class BattleDirector : MonoBehaviour
             else
             {
                 playerTwo = player;
-
             }
         }
 
@@ -53,8 +52,7 @@ public class BattleDirector : MonoBehaviour
         }*/
     }
 
-    /*[PunRPC]
-    void RPC_SwitchTurn()
+    public void SwitchTurn()
     {
         if (nowTurn == PlayerTurn.PLAYER1)
         {
@@ -68,5 +66,6 @@ public class BattleDirector : MonoBehaviour
             playerTwo.thisTurn = false;
             playerOne.thisTurn = true;
         }
-    }*/
+        Debug.Log("ig u hav switched turns");
+    }
 }
