@@ -10,8 +10,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public TMP_InputField createInput;
     public TMP_InputField joinInput;
 
+
     public void CreateRoom()
     {
+        RoomOptions roomOptions = new RoomOptions();
+        /*roomOptions.MaxPlayers = 2;
+        roomOptions.BroadcastPropsChangeToAll = true;*/
         PhotonNetwork.CreateRoom(createInput.text, new RoomOptions() { MaxPlayers = 2, BroadcastPropsChangeToAll = true });
     }
 

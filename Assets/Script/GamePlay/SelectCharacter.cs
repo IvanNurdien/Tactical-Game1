@@ -26,13 +26,6 @@ public class SelectCharacter : MonoBehaviour
         Debug.Log(playerTag);
     }
 
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     // Detect Mouse by changing color
     private void OnMouseEnter()

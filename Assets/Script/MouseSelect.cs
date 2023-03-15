@@ -7,6 +7,8 @@ using UnityEngine;
 public enum PLAYERSELECT {PLAYER_1, PLAYER_2}
 public class MouseSelect : MonoBehaviour
 {
+    public bool isPickingUnit = true;
+
     private PlayerController pc;
 
     public Camera camera;
@@ -20,7 +22,7 @@ public class MouseSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) )
         {
             if (!PointerOverUI())
             {
@@ -28,17 +30,21 @@ public class MouseSelect : MonoBehaviour
 
                 if (Physics.Raycast(ray, out RaycastHit hitInfo))
                 {
-                    if (hitInfo.collider.gameObject.GetComponent<SelectCharacter>() != null)
+                    if (hitInfo.collider.gameObject.GetComponent<SelectCharacter>() != null && isPickingUnit)
                     {
                         pc.unitSelected(hitInfo.collider.gameObject);
                     }
-                    else
+                    else if (!pc.isAttacking)
                     {
+                        CameraController.instance.followUnit = null;
+
                         pc.unitSelected(null);
                     }
                 }
-                else
+                else if (!pc.isAttacking)
                 {
+                    CameraController.instance.followUnit = null;
+
                     pc.unitSelected(null);
                 }
             }

@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using ExitGames.Client.Photon;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,24 +22,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool isPlayerOne;
+
     public List<MyUnits> controlledUnits;
 
     [SerializeField]
     BattleDirector bd;
 
     [SerializeField]
-    PhotonView view;
+    public PhotonView view;
 
     public bool thisTurn;
     public Player thisPlayer;
 
+    MouseSelect mouseSelect;
     public GameObject selectedUnit;
     [SerializeField] GameObject battleMenu;
+    [SerializeField] GameObject confirmAtk;
 
     public TMP_Text testText;
     public TMP_Text myTurn;
 
-    
+    public bool isAttacking;
+
+    private const byte TAKE_DAMAGE = 0;
+
+
     // SET PLAYER INFO
     public void SetPlayerInfo(Player _player)
     {
@@ -47,8 +57,18 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        mouseSelect = GetComponent<MouseSelect>();
         bd = GameObject.Find("Battle Director").GetComponent<BattleDirector>();
         view = GetComponent<PhotonView>();
+
+        if (view.Owner.IsMasterClient)
+        {
+            isPlayerOne = true;
+        } else
+        {
+            isPlayerOne = false;
+        }
+        view.RPC("RPC_SetPlayerPosition", RpcTarget.AllBuffered);
     }
 
     // Update is called once per frame
@@ -64,16 +84,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+    }
+    private void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+    }
+
+    private void NetworkingClient_EventReceived(EventData obj)
+    {
+        if (obj.Code == TAKE_DAMAGE)
+        {
+            object[] datas = (object[])obj.CustomData;
+            float myViewID = (float)datas[0];
+            float damageReceived = (float)datas[1];
+
+            if (view.ViewID == myViewID)
+            {
+                Debug.Log("I have received " + damageReceived + "pts of damage!");
+            }
+        }
+    }
+
+    // METHOD TO RECHECK THE UNITS AVAILABILITY AFTER USING EACH
     void CheckAllUnitsAvail()
     {
         bool firstUnit = controlledUnits[0].IsUnitAvail;
         bool secondUnit = controlledUnits[1].IsUnitAvail;
         bool thirdUnit = controlledUnits[2].IsUnitAvail;
         
+        // SWITCH TURNS WHEN THERES NO MORE UNITS AVAILABLE
         if (!firstUnit && !secondUnit && !thirdUnit)
         {
             Debug.Log("Nah u dont have any units left");
-            view.RPC("RPC_SwitchTurn", RpcTarget.All);
+            view.RPC("RPC_SwitchTurn", RpcTarget.AllBuffered);
         } else
         {
             Debug.Log("U good");
@@ -81,32 +127,52 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // RESET THE UNITS TO AVAILABLE AGAIN
+    public void ResetUnit()
+    {
+        if (!view.IsMine) return;
+
+        controlledUnits[0].IsUnitAvail = true;
+        controlledUnits[0].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+        controlledUnits[1].IsUnitAvail = true;
+        controlledUnits[1].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+        controlledUnits[2].IsUnitAvail = true;
+        controlledUnits[2].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+    }
+
     public void unitSelected(GameObject selectedUnit_)
     {
-        if (selectedUnit_ != null)
+        if (selectedUnit_ != null && thisTurn)
         {
             // CHECK IF THIS UNIT IS MINE OR NOT
             PhotonView unitView = selectedUnit_.GetComponentInParent<PhotonView>();
             if (unitView.IsMine)
             {
                 GameObject unitName = selectedUnit_.transform.parent.gameObject;
+
                 // CHECK IF UNITS HAS BEEN PLAYED OR NOT
                 foreach (MyUnits unit in controlledUnits)
                 {
-                    if (unit.Unit == unitName && unit.IsUnitAvail)
+                    if (unit.Unit == unitName && unit.IsUnitAvail && !isAttacking)
                     {
                         Debug.Log("This is it chief");
 
                         // SET THE SELECTED UNIT VARIABLE TO THE SELECTED UNIT AND
                         // ACTIVATES THE BATTLE MENU
+                        CameraController.instance.followUnit = selectedUnit_.transform;
                         selectedUnit = selectedUnit_;
                         battleMenu.SetActive(true);
                     }
                 }
+            } else if (isAttacking)
+            {
+                selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
+                confirmAtk.SetActive(true);
             }
         }
         else
         {
+            CameraController.instance.followUnit = null;
             selectedUnit = null;
             battleMenu.SetActive(false);
         }
@@ -120,8 +186,37 @@ public class PlayerController : MonoBehaviour
 
         // DEACTIVATES BATTLE MENU WHEN MOVING
         battleMenu.SetActive(false);
+        mouseSelect.isPickingUnit = false;
+
         Debug.Log("Fired");
     }
+
+    public void UnitAttack()
+    {
+        // GET MOVEMENT SCRIPT ON SELECTED UNIT AND CHANGE STATE TO ATTACK
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+        ms.ActionSwitch(ActionType.Attack, this);
+        isAttacking = true;
+
+        // DEACTIVATES BATTLE MENU WHEN ATTACKING
+        battleMenu.SetActive(false);
+    }
+
+    public void ConfirmAttack(bool accept)
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+        if (accept)
+        {
+            ms.AttackUnit();
+            confirmAtk.SetActive(false);
+
+        }
+        else
+        {
+            confirmAtk.SetActive(false);
+        }
+    }
+
 
     // SETS THE LATEST UNIT TO BE MOVED TO UNAVAILABLE
     public void EndUnitTurn(GameObject unitName)
@@ -135,13 +230,29 @@ public class PlayerController : MonoBehaviour
             }
         }
         CheckAllUnitsAvail();
+        mouseSelect.isPickingUnit = true;
     }
-
-
 
     [PunRPC]
     void RPC_SwitchTurn()
     {
         bd.SwitchTurn();
+    }
+
+    [PunRPC]
+    void RPC_SetPlayerPosition()
+    {
+        if (isPlayerOne)
+        {
+            this.transform.SetParent(GameObject.Find("PC One").transform);
+            bd.playerOne = this;
+            
+        } else
+        {
+            this.transform.SetParent(GameObject.Find("PC Two").transform);
+            bd.playerTwo = this;
+        }
+        this.transform.localScale = new Vector3(1, 1, 1);
+        this.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
     }
 }

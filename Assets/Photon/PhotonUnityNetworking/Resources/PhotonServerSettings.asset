@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: asia
     Server: 
     Port: 0
     ProxyServer: 
@@ -43,6 +43,10 @@ MonoBehaviour:
   - CharSelectedByOtherPlayer
   - RPC_CharSelectedByOtherPlayer
   - RPC_SwitchTurn
+  - RPC_SetPlayerPosition
+  - RPC_SetPlayerTurn
+  - SyncBattleDirector
+  - RPC_SyncBattleDirector
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

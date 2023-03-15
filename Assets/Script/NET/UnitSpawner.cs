@@ -6,6 +6,9 @@ using Photon.Realtime;
 
 public class UnitSpawner : MonoBehaviourPunCallbacks
 {
+    PlayerController pcOne;
+    PlayerController pcTwo;
+
     public GameObject player1Spawn;
     public GameObject player2Spawn;
 
@@ -26,6 +29,13 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
     private void Start()
     {
         UpdatePlayerList();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnUnits(player1Spawn, pcOne);
+        } else
+        {
+            SpawnUnits(player2Spawn, pcTwo);
+        }
     }
 
     public void SpawnUnits(GameObject playerSpawn, PlayerController pc)
@@ -76,27 +86,56 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
+
+
         foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
         {*/
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0,0,0), Quaternion.identity).GetComponent<PlayerController>();
-                //newPlayerItem.SetPlayerInfo(player.Value);
-                newPlayerItem.transform.SetParent(pcSpawnOne);
-                newPlayerItem.transform.localScale = new Vector3(1, 1, 1);
-                newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
-                SpawnUnits(player1Spawn, newPlayerItem);
-                bd.playerList.Add(newPlayerItem);
-            } else
-            {
-                PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<PlayerController>();
-                //newPlayerItem.SetPlayerInfo(player.Value);
-                newPlayerItem.transform.SetParent(pcSpawnTwo);
-                newPlayerItem.transform.localScale = new Vector3(1,1,1);
-                newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
-                SpawnUnits(player2Spawn, newPlayerItem);
-                bd.playerList.Add(newPlayerItem);
-            }
+        PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<PlayerController>();
+        
+        Debug.Log("Once");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            pcOne = newPlayerItem;
+        }
+        else
+        {
+            pcTwo = newPlayerItem;
+        }
+
+        //newPlayerItem.SetPlayerInfo(player.Value);
+        /*if (PhotonNetwork.IsMasterClient)
+        {
+            newPlayerItem.transform.SetParent(pcSpawnOne);
+            pcOne = newPlayerItem;
+        } else
+        {
+            pcTwo = newPlayerItem;
+            newPlayerItem.transform.SetParent(pcSpawnTwo);
+        }
+        newPlayerItem.transform.localScale = new Vector3(1, 1, 1);
+        newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
+        bd.playerList.Add(newPlayerItem);*/
+
+        /*if (player.Value == PhotonNetwork.MasterClient)
+        {
+            PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0,0,0), Quaternion.identity).GetComponent<PlayerController>();
+            //newPlayerItem.SetPlayerInfo(player.Value);
+            newPlayerItem.transform.SetParent(pcSpawnOne);
+            newPlayerItem.transform.localScale = new Vector3(1, 1, 1);
+            newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
+            SpawnUnits(player1Spawn, newPlayerItem);
+            bd.playerList.Add(newPlayerItem);
+        } else
+        {
+            PlayerController newPlayerItem = PhotonNetwork.Instantiate(playerControllerPrefab.name, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<PlayerController>();
+            //newPlayerItem.SetPlayerInfo(player.Value);
+            newPlayerItem.transform.SetParent(pcSpawnTwo);
+            newPlayerItem.transform.localScale = new Vector3(1,1,1);
+            newPlayerItem.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
+
+            SpawnUnits(player2Spawn, newPlayerItem);
+            bd.playerList.Add(newPlayerItem);
+        }*/
         //}
     }
 
