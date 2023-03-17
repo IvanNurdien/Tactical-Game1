@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     MouseSelect mouseSelect;
     public GameObject selectedUnit;
     [SerializeField] GameObject battleMenu;
-    [SerializeField] GameObject confirmAtk;
+    public GameObject confirmAtk;
 
     public TMP_Text testText;
     public TMP_Text myTurn;
@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         {
             object[] datas = (object[])obj.CustomData;
             float myViewID = (float)datas[0];
-            float damageReceived = (float)datas[1];
+            int damageReceived = (int)datas[1];
 
             if (view.ViewID == myViewID)
             {
@@ -167,7 +167,6 @@ public class PlayerController : MonoBehaviour
             } else if (isAttacking)
             {
                 selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
-                confirmAtk.SetActive(true);
             }
         }
         else
@@ -208,6 +207,7 @@ public class PlayerController : MonoBehaviour
         if (accept)
         {
             ms.AttackUnit();
+            isAttacking = false;
             confirmAtk.SetActive(false);
 
         }

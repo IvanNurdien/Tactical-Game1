@@ -17,9 +17,9 @@ public class MovementScript : MonoBehaviourPun
     [System.Serializable]
     public class atkDamage
     {
-        public float baseDamage;
-        public float maxDamage;
-        public atkDamage(float bDamage, float mDamage)
+        public int baseDamage;
+        public int maxDamage;
+        public atkDamage(int bDamage, int mDamage)
         {
             baseDamage = bDamage;
             maxDamage = mDamage;
@@ -105,20 +105,25 @@ public class MovementScript : MonoBehaviourPun
     public void CheckIfEnemyOnRange(GameObject enemyUnit)
     {
         List<GameObject> enemySurroundMe = areaAtk.GetComponent<AttackArea>().enemiesInRange;
-        foreach (GameObject enemy in enemySurroundMe)
+        if (enemySurroundMe.Contains(enemyUnit))
         {
-            if (enemy == enemyUnit)
-            {
-                Debug.Log("yep boss he's in range");
-                target = enemyUnit;
-            }
+            Debug.Log("yep boss he's in range");
+            target = enemyUnit;
+            pc.confirmAtk.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("no boss");
+            target = null;
+            pc.confirmAtk.SetActive(false);
+
         }
     }
 
     public void AttackUnit()
     {
         areaAtk.SetActive(false);
-        float damage = Random.Range(unitAtkDamage.baseDamage, unitAtkDamage.maxDamage);
+        int damage = Random.Range(unitAtkDamage.baseDamage, unitAtkDamage.maxDamage);
         Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
 
         float enemyViewID = pc.view.ViewID;
