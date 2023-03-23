@@ -15,12 +15,18 @@ public class PlayerController : MonoBehaviour
     {
         public GameObject Unit;
         public bool IsUnitAvail = true;
-        public MyUnits(GameObject unit, bool isUnitAvail)
+        public Sprite unitSprite;
+        public MyUnits(GameObject unit, bool isUnitAvail, Sprite unitSprt)
         {
             Unit = unit;
             IsUnitAvail = isUnitAvail;
+            unitSprite = unitSprt;
         }
     }
+
+    public Image firstUnitImage;
+    public Image secondUnitImage;
+    public Image thirdUnitImage;
 
     public bool isPlayerOne;
 
@@ -41,8 +47,8 @@ public class PlayerController : MonoBehaviour
     public GameObject confirmAtk;
     public GameObject confirmSp;
 
-    public TMP_Text testText;
-    public TMP_Text myTurn;
+    /*public TMP_Text testText;
+    public TMP_Text myTurn;*/
     [SerializeField] Image healthbarImage;
 
     public bool isAttacking;
@@ -64,6 +70,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        firstUnitImage.sprite = controlledUnits[0].unitSprite;
+        secondUnitImage.sprite = controlledUnits[1].unitSprite;
+        thirdUnitImage.sprite = controlledUnits[2].unitSprite;
+
         mouseSelect = GetComponent<MouseSelect>();
         bd = GameObject.Find("Battle Director").GetComponent<BattleDirector>();
         view = GetComponent<PhotonView>();
@@ -81,14 +91,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (thisTurn)
+        /*if (thisTurn)
         {
             myTurn.text = "My Turn!";
         }
         else
         {
             myTurn.text = "Not My Turn";
-        }
+        }*/
     }
 
     private void OnEnable()
@@ -294,5 +304,7 @@ public class PlayerController : MonoBehaviour
         }
         this.transform.localScale = new Vector3(1, 1, 1);
         this.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
+        this.GetComponent<RectTransform>().offsetMin = new Vector2(this.GetComponent<RectTransform>().offsetMin.y, 0);
+        this.GetComponent<RectTransform>().offsetMax = new Vector2(this.GetComponent<RectTransform>().offsetMax.y, 0);
     }
 }

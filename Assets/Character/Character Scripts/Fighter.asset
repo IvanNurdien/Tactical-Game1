@@ -20,3 +20,6 @@ MonoBehaviour:
   damage: 100
   maxHP: 100
   currentHp: 100
+  characterSelectSprite: {fileID: 21300000, guid: 3d4c5d6fcd7124c4b967feec326b78e0,
+    type: 3}
+  gameplaySprite: {fileID: 21300000, guid: 86f5762db5538d94abaa3e58add6bbba, type: 3}

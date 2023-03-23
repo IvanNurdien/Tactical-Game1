@@ -49,8 +49,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["firstUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
+                Sprite unitSprite = unit.gameplaySprite;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
             }
         }
         foreach (var unit in unitList)
@@ -58,8 +59,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["secondUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
+                Sprite unitSprite = unit.gameplaySprite;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
             }
         }
         foreach (var unit in unitList)
@@ -67,8 +69,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             if ((int)PhotonNetwork.LocalPlayer.CustomProperties["thirdUnit"] == unit.unitNumber)
             {
                 GameObject unitToSpawn = unit.characterPrefab;
+                Sprite unitSprite = unit.gameplaySprite;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
             }
         }
     }
