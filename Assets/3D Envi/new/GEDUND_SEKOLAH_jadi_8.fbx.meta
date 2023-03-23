@@ -3,7 +3,32 @@ guid: cdd38572b497ed94a9d5d979eff9fb10
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LogoSekolah-rev-1fffaa
+    second: {fileID: 2100000, guid: f090760591d3962429dedc0c48ae400d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: f797714c90b4b5a4fa8562d24b4f810c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 46980860d87fa1b47be0b86efff03053, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 7ff34225e0400c9459f603f9a449e62e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: 57a0140f00f0e2d4e936f090837d0563, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

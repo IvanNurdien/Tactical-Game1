@@ -1215,7 +1215,6 @@ GameObject:
   - component: {fileID: 4563119487643573270}
   - component: {fileID: 4563119487643573273}
   - component: {fileID: 1842660001132906122}
-  - component: {fileID: 3684885534199909223}
   m_Layer: 0
   m_Name: Battler
   m_TagString: Untagged
@@ -1311,22 +1310,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 3684885534199909223}
+  - {fileID: 3514075463032481299}
+  - {fileID: 5004818617739552584}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3684885534199909223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4563119487643573275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f81059acd3b7624092f5c91bfa34104, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4563119488142186352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1864,6 +1852,9 @@ GameObject:
   - component: {fileID: 6611056997269748344}
   - component: {fileID: 8074282385912643175}
   - component: {fileID: 19732725}
+  - component: {fileID: 4807808039908958440}
+  - component: {fileID: 3514075463032481299}
+  - component: {fileID: 5004818617739552584}
   m_Layer: 0
   m_Name: Apani
   m_TagString: Player 1
@@ -2026,8 +2017,8 @@ MonoBehaviour:
   isSpecialUnlimitedRange: 0
   isForOwnUnit: 1
   charController: {fileID: 6611056997269748344}
-  movementSpeed: 10
-  rotationSpeed: 180
+  movementSpeed: 7.5
+  rotationSpeed: 540
   canAttack: 1
   targetBuffAmount: 10
   unitBuffCounter:
@@ -2059,6 +2050,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: 
   isPlayed: 0
+--- !u!95 &4807808039908958440
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315070590569643211}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e0c183ca449873a4289be1a5e181c3e6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &3514075463032481299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315070590569643211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 1
+    Name: isWalk
+  - Type: 9
+    SynchronizeType: 1
+    Name: isAttack
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+--- !u!114 &5004818617739552584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315070590569643211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &6341425994245770867
 GameObject:
   m_ObjectHideFlags: 0
@@ -4322,7 +4373,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6560
+  m_VersionIndex: 6569
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
