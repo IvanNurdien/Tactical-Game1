@@ -254,8 +254,8 @@ public class MovementScript : MonoBehaviourPun
         int maxDamage = unitAtkDamage.maxDamage;
         if (unitBuffCounter.isBuffed)
         {
-            baseDamage =+ unitBuffCounter.buffAmount;
-            maxDamage =+ unitBuffCounter.buffAmount;
+            baseDamage += unitBuffCounter.buffAmount;
+            maxDamage += unitBuffCounter.buffAmount;
         }
         int damage = Random.Range(baseDamage, maxDamage);
         Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
@@ -305,7 +305,7 @@ public class MovementScript : MonoBehaviourPun
         charController.Move(cameraRelativeMovement * movementSpeed * Time.deltaTime);
     }
 
-    void EndMove()
+    public void EndMove()
     {
         if (unitBuffCounter.isBuffed)
         {

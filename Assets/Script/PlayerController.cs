@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
         public GameObject Unit;
         public bool IsUnitAvail = true;
         public Sprite unitSprite;
+        public Image unitSpriteUI;
         public MyUnits(GameObject unit, bool isUnitAvail, Sprite unitSprt)
         {
             Unit = unit;
@@ -59,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
     private const byte TAKE_DAMAGE = 1;
     private const byte TAKE_HEAL = 2;
+    private const byte SYNC_UNITS = 3;
 
 
     // SET PLAYER INFO
@@ -68,11 +71,9 @@ public class PlayerController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-        firstUnitImage.sprite = controlledUnits[0].unitSprite;
-        secondUnitImage.sprite = controlledUnits[1].unitSprite;
-        thirdUnitImage.sprite = controlledUnits[2].unitSprite;
+        
 
         mouseSelect = GetComponent<MouseSelect>();
         bd = GameObject.Find("Battle Director").GetComponent<BattleDirector>();
@@ -86,6 +87,43 @@ public class PlayerController : MonoBehaviour
             isPlayerOne = false;
         }
         view.RPC("RPC_SetPlayerPosition", RpcTarget.AllBuffered);
+
+        // SYNC UNIT SPRITES
+        string firstSprite = controlledUnits[0].unitSprite.name;
+        string secondSprite = controlledUnits[1].unitSprite.name;
+        string thirdSprite = controlledUnits[2].unitSprite.name;
+
+        float myViewID = view.ViewID;
+        object[] datas = new object[] { myViewID, firstSprite, secondSprite, thirdSprite };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+
+        yield return new WaitForSeconds(3f);
+
+        PhotonNetwork.RaiseEvent(SYNC_UNITS, datas, raiseEventOptions, SendOptions.SendReliable);
+
+        //view.RPC("RPC_SyncSprites", RpcTarget.OthersBuffered, myViewID, firstSprite, secondSprite, thirdSprite);
+
+        firstUnitImage.sprite = controlledUnits[0].unitSprite;
+        secondUnitImage.sprite = controlledUnits[1].unitSprite;
+        thirdUnitImage.sprite = controlledUnits[2].unitSprite;
+
+        controlledUnits[0].unitSpriteUI = firstUnitImage;
+        controlledUnits[1].unitSpriteUI = secondUnitImage;
+        controlledUnits[2].unitSpriteUI = thirdUnitImage;
+
+    }
+
+    [PunRPC]
+    public void RPC_SyncSprites(float viewID, string firstSprite, string secondSprite, string thirdSprite)
+    {
+        if (view.ViewID == viewID)
+        {
+            Debug.Log("Yep it is fired");
+
+            firstUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + firstSprite);
+            secondUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + secondSprite);
+            thirdUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + thirdSprite);
+        }
     }
 
     // Update is called once per frame
@@ -128,6 +166,25 @@ public class PlayerController : MonoBehaviour
                 currentHealth -= damageReceived;
                 healthbarImage.fillAmount = currentHealth / maxHealth;
             }
+        } else if (obj.Code == SYNC_UNITS)
+        {
+            object[] datas = (object[])obj.CustomData;
+
+            float myViewID = (float)datas[0];
+            string firstSprite = (string)datas[1];
+            string secondSprite = (string)datas[2];
+            string thirdSprite = (string)datas[3];
+            if (view.ViewID == myViewID)
+            {
+                Debug.Log("Yep it is fired");
+
+                firstUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + firstSprite);
+                secondUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + secondSprite);
+                thirdUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + thirdSprite);
+            }
+        }
+        {
+
         }
     }
 
@@ -185,6 +242,14 @@ public class PlayerController : MonoBehaviour
                         CameraController.instance.followUnit = selectedUnit_.transform;
                         selectedUnit = selectedUnit_;
                         battleMenu.SetActive(true);
+                        var uiColor = unit.unitSpriteUI.color;
+                        uiColor.a = 1f;
+                        unit.unitSpriteUI.color = uiColor;
+                    } else
+                    {
+                        var uiColor = unit.unitSpriteUI.color;
+                        uiColor.a = .5f;
+                        unit.unitSpriteUI.color = uiColor;
                     }
                 }
             } else if (isAttacking)
@@ -200,6 +265,12 @@ public class PlayerController : MonoBehaviour
             CameraController.instance.followUnit = null;
             selectedUnit = null;
             battleMenu.SetActive(false);
+            foreach (MyUnits unit in controlledUnits)
+            {
+                var uiColor = unit.unitSpriteUI.color;
+                uiColor.a = 1f;
+                unit.unitSpriteUI.color = uiColor;
+            }
         }
     }
 
@@ -234,6 +305,12 @@ public class PlayerController : MonoBehaviour
         isSpecial = true;
 
         battleMenu.SetActive(false);
+    }
+
+    public void UnitEndMove()
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+        ms.EndMove();
     }
 
     public void ConfirmAttack(bool accept)
@@ -306,5 +383,7 @@ public class PlayerController : MonoBehaviour
         this.GetComponent<RectTransform>().anchoredPosition = new Vector3(1, 1, 1);
         this.GetComponent<RectTransform>().offsetMin = new Vector2(this.GetComponent<RectTransform>().offsetMin.y, 0);
         this.GetComponent<RectTransform>().offsetMax = new Vector2(this.GetComponent<RectTransform>().offsetMax.y, 0);
+
+        
     }
 }

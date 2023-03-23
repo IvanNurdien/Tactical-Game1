@@ -1729,7 +1729,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6620
+  m_VersionIndex: 6623
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3142,7 +3142,7 @@ MonoBehaviour:
   target: {fileID: 0}
   areaTp: {fileID: 37821249882362237}
   areaAtk: {fileID: 6873492571229730003}
-  areaSp: {fileID: 0}
+  areaSp: {fileID: 5699859685750710613}
   pc: {fileID: 0}
 --- !u!114 &7944044632052110584
 MonoBehaviour:
