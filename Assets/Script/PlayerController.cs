@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,17 +35,24 @@ public class PlayerController : MonoBehaviour
     public bool thisTurn;
     public Player thisPlayer;
 
-    MouseSelect mouseSelect;
+    [HideInInspector] public MouseSelect mouseSelect;
     public GameObject selectedUnit;
     [SerializeField] GameObject battleMenu;
     public GameObject confirmAtk;
+    public GameObject confirmSp;
 
     public TMP_Text testText;
     public TMP_Text myTurn;
+    [SerializeField] Image healthbarImage;
 
     public bool isAttacking;
+    public bool isSpecial;
 
-    private const byte TAKE_DAMAGE = 0;
+    const float maxHealth = 1000;
+    float currentHealth = maxHealth;
+
+    private const byte TAKE_DAMAGE = 1;
+    private const byte TAKE_HEAL = 2;
 
 
     // SET PLAYER INFO
@@ -92,18 +99,24 @@ public class PlayerController : MonoBehaviour
     {
         PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
     }
-
+    
     private void NetworkingClient_EventReceived(EventData obj)
     {
+        // TAKE DAMAGE EVENT FROM UNITS
         if (obj.Code == TAKE_DAMAGE)
         {
+            // GET EVENT DATAS
             object[] datas = (object[])obj.CustomData;
-            float myViewID = (float)datas[0];
+
+            float enemyViewID = (float)datas[0];
             int damageReceived = (int)datas[1];
 
-            if (view.ViewID == myViewID)
+            // CHECKS VIEWID IS MATCHING OR NOT
+            if (view.ViewID != enemyViewID)
             {
                 Debug.Log("I have received " + damageReceived + "pts of damage!");
+                currentHealth -= damageReceived;
+                healthbarImage.fillAmount = currentHealth / maxHealth;
             }
         }
     }
@@ -167,6 +180,9 @@ public class PlayerController : MonoBehaviour
             } else if (isAttacking)
             {
                 selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
+            } else if (isSpecial || unitView.IsMine)
+            {
+                selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
             }
         }
         else
@@ -201,6 +217,15 @@ public class PlayerController : MonoBehaviour
         battleMenu.SetActive(false);
     }
 
+    public void UnitSpecial()
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+        ms.ActionSwitch(ActionType.Special, this);
+        isSpecial = true;
+
+        battleMenu.SetActive(false);
+    }
+
     public void ConfirmAttack(bool accept)
     {
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
@@ -214,6 +239,21 @@ public class PlayerController : MonoBehaviour
         else
         {
             confirmAtk.SetActive(false);
+        }
+    }
+
+    public void ConfirmSpecial(bool accept)
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+
+        if (accept)
+        {
+            ms.SpecialUnit();
+            isSpecial = false;
+            confirmSp.SetActive(false);
+        } else
+        {
+            confirmSp.SetActive(false);
         }
     }
 
