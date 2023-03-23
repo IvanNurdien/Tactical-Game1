@@ -47,6 +47,7 @@ MonoBehaviour:
   - RPC_SetPlayerTurn
   - SyncBattleDirector
   - RPC_SyncBattleDirector
+  - RPC_SyncSprites
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

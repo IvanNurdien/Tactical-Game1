@@ -1875,7 +1875,7 @@ MonoBehaviour:
   target: {fileID: 0}
   areaTp: {fileID: 8147030560688166570}
   areaAtk: {fileID: 8089492716970518050}
-  areaSp: {fileID: 0}
+  areaSp: {fileID: 8449775695105069855}
   pc: {fileID: 0}
 --- !u!114 &2281255284614779695
 MonoBehaviour:
