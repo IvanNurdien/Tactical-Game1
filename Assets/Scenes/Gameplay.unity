@@ -3374,7 +3374,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPickingUnit: 1
-  isPickingUnitToAttack: 0
   camera: {fileID: 963194227}
 --- !u!1 &992539026
 GameObject:
