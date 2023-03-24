@@ -77,7 +77,7 @@ public class MovementScript : MonoBehaviourPun
     public CharacterController controller;
 >>>>>>> Stashed changes
     [SerializeField] protected float movementSpeed = 10f;
-    [SerializeField] protected float rotationSpeed = 180f;
+    [SerializeField] protected float rotationSpeed = 360f;
     public bool canAttack = true;
     const int specialCount = 5;
     int currentSpecialCount = specialCount;
@@ -97,6 +97,7 @@ public class MovementScript : MonoBehaviourPun
     //public static MovementScript insMov;
     public static Animasi anm;
 
+    Animator anim;
     public PlayerController pc;
     PlayerController enemyPC;
 
@@ -112,6 +113,7 @@ public class MovementScript : MonoBehaviourPun
         else if (insMov != this)
             Debug.Log("bruh this is the cause of the missing child");*/
         sc = GetComponent<SelectCharacter>();
+        anim = GetComponent<Animator>();
     }
     void Update()
     {
@@ -290,6 +292,7 @@ public class MovementScript : MonoBehaviourPun
         int damage = Random.Range(baseDamage, maxDamage);
         Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
 
+        anim.SetTrigger("isAttack");
         float myViewID = pc.view.ViewID;
         object[] datas = new object[] { myViewID , damage };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
@@ -325,6 +328,8 @@ public class MovementScript : MonoBehaviourPun
         Vector3 right = Camera.main.transform.right;
         forward.y = 0;
         right.y = 0;
+        forward = forward.normalized;
+        right = right.normalized;
 
         // CREATE DIRECTION-RELATIVE INPUT VECTORS
         Vector3 forwardRelativeVerticalInput = verticalInput * forward;
@@ -333,6 +338,18 @@ public class MovementScript : MonoBehaviourPun
         // CREATE CAMERA-RELATIVE INPUT
         Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
         charController.Move(cameraRelativeMovement * movementSpeed * Time.deltaTime);
+        if (cameraRelativeMovement != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(cameraRelativeMovement, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            anim.SetFloat("isWalk", 1);
+        }
+        else
+        {
+            anim.SetFloat("isWalk", 0);
+
+        }
+
     }
 
     public void EndMove()
