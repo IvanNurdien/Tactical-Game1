@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+<<<<<<< Updated upstream
 using UnityEngine.UI;
+=======
+using Unity.VisualScripting;
+using Unit = DataCharacter.Unit;
+>>>>>>> Stashed changes
 
 public enum BattleState { START,PLAYERTUURN,ENEMYTURN,WON,LOST}
 public class BattleSystem : MonoBehaviour
 {
-    [SerializeField] private Unit [] characterData;
+    [SerializeField] private Unit[] characterData;
     /*public GameObject playerPrefab;
     public GameObject enemyprefab;
     public Transform playerBattlestation;
@@ -20,19 +25,32 @@ public class BattleSystem : MonoBehaviour
     public GameObject turnIndicator;
     public static BattleSystem insBatSy;
     public GameObject selectedChar;
+<<<<<<< Updated upstream
     public Animasi anim;
     public float turnTimeLimit = 10f; // batas waktu satu giliran
     private float turnTimer; // timer untuk menghitung waktu satu giliran
     public GameObject panelPlayer;
     public GameObject panelEnemy;
+=======
+    public GameObject box;
+
+    [SerializeField] TeleportOBJ areaTp;
+    
+    
+>>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
         state = BattleState.START;
         StartCoroutine(SetUpBattle());
+<<<<<<< Updated upstream
         turnTimer = turnTimeLimit;
         panelPlayer.SetActive(true);
         panelEnemy.SetActive(false);
+=======
+        
+
+>>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -68,8 +86,12 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerAttack()
     {
         yield return new WaitForSeconds(2f);
+<<<<<<< Updated upstream
         Debug.Log("musuh genten cok");
         panelPlayer.SetActive(false);
+=======
+        areaTp.theArea.SetActive(false);
+>>>>>>> Stashed changes
         state = BattleState.ENEMYTURN;
         StartCoroutine(EnemyTurn());
         
@@ -107,6 +129,7 @@ public class BattleSystem : MonoBehaviour
         en.SetActive(false);
         
         StartCoroutine(PlayerAttack());
+        box.SetActive(false);
         Debug.Log("playerAttack");
         EnemyTurn();    
         
@@ -117,9 +140,13 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("Character " + selectedChar.gameObject.name + " is selected");
     }
+<<<<<<< Updated upstream
     public void EndTurn()
     {
         Debug.Log("End Turn");
         StartCoroutine(PlayerAttack());
     }
 }
+=======
+}
+>>>>>>> Stashed changes

@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 //using Unity.Mathematics;
 using UnityEngine;
+<<<<<<< Updated upstream
 using Random = UnityEngine.Random;
+=======
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
+>>>>>>> Stashed changes
 
 public enum ActionType
 {
@@ -65,7 +69,13 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] bool isForOwnUnit = false;
 
     public CharacterController charController;
+<<<<<<< Updated upstream
 
+=======
+    float turnsmoothvelocity;
+    public float turnSmoothTime = 15f;
+    public CharacterController controller;
+>>>>>>> Stashed changes
     [SerializeField] protected float movementSpeed = 10f;
     [SerializeField] protected float rotationSpeed = 180f;
     public bool canAttack = true;
@@ -106,8 +116,28 @@ public class MovementScript : MonoBehaviourPun
     void Update()
     {
         MoveCharacter();
+<<<<<<< Updated upstream
         AttackMode();
         SpecialMode();
+=======
+    }
+    void MoveCharacter()
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        Vector3 movDirection = new Vector3(horizontalInput, 0f, verticalInput).normalized;
+        charController.Move(movDirection * movementSpeed * Time.deltaTime);
+        if (movDirection.magnitude >= 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(movDirection.x, movDirection.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnsmoothvelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            controller.Move(moveDir.normalized * movementSpeed * Time.deltaTime);
+        }
+            
+>>>>>>> Stashed changes
     }
 
     void MoveCharacter()

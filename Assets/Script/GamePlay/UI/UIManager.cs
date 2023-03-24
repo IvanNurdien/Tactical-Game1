@@ -9,7 +9,11 @@ public class UIManager : MonoBehaviour
     public GameObject PanelMenu;
     public void Update()
     {
+<<<<<<< Updated upstream
 
+=======
+        
+>>>>>>> Stashed changes
     }
     public void Start()
     {

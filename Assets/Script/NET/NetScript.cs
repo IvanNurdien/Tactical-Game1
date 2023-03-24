@@ -13,6 +13,7 @@ public class NetScript : MonoBehaviourPunCallbacks
         //connecting
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
+        Debug.Log("conecting");
     }
 
     public override void OnConnectedToMaster()
@@ -24,8 +25,14 @@ public class NetScript : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+<<<<<<< Updated upstream
         Debug.Log("join sukses");
         SceneManager.LoadScene("Lobby");
 
+=======
+        
+        PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+        Debug.Log("join sukses");
+>>>>>>> Stashed changes
     }
 }
