@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/ConeOfViewRenderer.cs.meta
 guid: 45e2f1d52ef7e2c4aae6da3a691f3b7c
+=======
+guid: a07c0b5adf666a243a6e95bae8171d29
+>>>>>>> Stashed changes:Assets/Script/GamePlay/MouseSelect.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
