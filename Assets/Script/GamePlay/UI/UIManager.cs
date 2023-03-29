@@ -7,10 +7,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public GameObject PanelMenu;
-    public void Update()
-    {
-
-    }
+    
     public void Start()
     {
         PanelMenu.SetActive(true);

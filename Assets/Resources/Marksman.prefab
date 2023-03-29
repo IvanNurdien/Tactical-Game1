@@ -286,7 +286,8 @@ GameObject:
   - component: {fileID: 84829647901152094}
   - component: {fileID: 479590895675807320}
   - component: {fileID: 479590895675807321}
-  - component: {fileID: 8494314853299849367}
+  - component: {fileID: 956027109630322029}
+  - component: {fileID: 2218460473348165692}
   - component: {fileID: 785906417578122015}
   - component: {fileID: 7236999874188413987}
   - component: {fileID: 8055284153714832386}
@@ -353,8 +354,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!143 &8494314853299849367
-CharacterController:
+--- !u!54 &956027109630322029
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749480662781757924}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &2218460473348165692
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -363,14 +380,10 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 17.98
-  m_Radius: 7.3
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 9.5, z: 0}
+  m_Radius: 4.5040936
+  m_Height: 17.579374
+  m_Direction: 1
+  m_Center: {x: 0, y: 9.192462, z: -0.81070006}
 --- !u!114 &785906417578122015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,7 +399,7 @@ MonoBehaviour:
   specialType: 0
   isSpecialUnlimitedRange: 0
   isForOwnUnit: 0
-  charController: {fileID: 8494314853299849367}
+  rb: {fileID: 956027109630322029}
   movementSpeed: 7.5
   rotationSpeed: 540
   canAttack: 1
@@ -3989,6 +4002,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire Thrower
       objectReference: {fileID: 0}
+    - target: {fileID: 8907303551047315502, guid: 6f042274c3af4c04784d4c17e8e7a15b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8907303551047315503, guid: 6f042274c3af4c04784d4c17e8e7a15b,
         type: 3}
       propertyPath: m_RootOrder
@@ -4042,6 +4060,11 @@ PrefabInstance:
     - target: {fileID: 8907303551047315503, guid: 6f042274c3af4c04784d4c17e8e7a15b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907303552815049349, guid: 6f042274c3af4c04784d4c17e8e7a15b,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

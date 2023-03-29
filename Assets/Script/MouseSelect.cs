@@ -12,12 +12,15 @@ public class MouseSelect : MonoBehaviour
     private PlayerController pc;
 
     public Camera camera;
+
     // Start is called before the first frame update
     void Start()
     {
         pc = GetComponent<PlayerController>();
         camera = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
+
+    
 
     // Update is called once per frame
     void Update()

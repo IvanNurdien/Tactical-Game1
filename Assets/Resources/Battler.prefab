@@ -1849,7 +1849,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2292215466598931267}
   - component: {fileID: 3583173460877988511}
-  - component: {fileID: 6611056997269748344}
+  - component: {fileID: 4958996162590500694}
+  - component: {fileID: 8500626222028670545}
   - component: {fileID: 8074282385912643175}
   - component: {fileID: 19732725}
   - component: {fileID: 4807808039908958440}
@@ -1983,8 +1984,24 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000026285648, y: 0.84312093, z: -0.04048635}
     m_Extent: {x: 1.0239377, y: 0.9452876, z: 0.2049913}
   m_DirtyAABB: 0
---- !u!143 &6611056997269748344
-CharacterController:
+--- !u!54 &4958996162590500694
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315070590569643211}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &8500626222028670545
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1993,14 +2010,10 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.65
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.87, z: 0}
+  m_Radius: 0.5231705
+  m_Height: 1.867759
+  m_Direction: 1
+  m_Center: {x: -0.000026285648, y: 0.9113468, z: -0.040486336}
 --- !u!114 &8074282385912643175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2016,7 +2029,7 @@ MonoBehaviour:
   specialType: 3
   isSpecialUnlimitedRange: 0
   isForOwnUnit: 1
-  charController: {fileID: 6611056997269748344}
+  rb: {fileID: 4958996162590500694}
   movementSpeed: 7.5
   rotationSpeed: 540
   canAttack: 1

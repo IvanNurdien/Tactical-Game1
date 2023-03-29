@@ -4,8 +4,6 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-//using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -64,8 +62,10 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] bool isSpecialUnlimitedRange = false;
     [SerializeField] bool isForOwnUnit = false;
 
-    public CharacterController charController;
-
+    public Rigidbody rb;
+    float turnsmoothvelocity;
+    public float turnSmoothTime = 15f;
+    public CharacterController controller;
     [SerializeField] protected float movementSpeed = 10f;
     [SerializeField] protected float rotationSpeed = 360f;
     public bool canAttack = true;
@@ -85,7 +85,6 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] GameObject areaSp;
 
     //public static MovementScript insMov;
-    public static Animasi anm;
 
     Animator anim;
     public PlayerController pc;
@@ -105,7 +104,7 @@ public class MovementScript : MonoBehaviourPun
         sc = GetComponent<SelectCharacter>();
         anim = GetComponent<Animator>();
     }
-    void Update()
+    private void Update()
     {
         MoveCharacter();
         AttackMode();
@@ -307,7 +306,7 @@ public class MovementScript : MonoBehaviourPun
 
         // CREATE CAMERA-RELATIVE INPUT
         Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
-        charController.Move(cameraRelativeMovement * movementSpeed * Time.deltaTime);
+        rb.AddForce(cameraRelativeMovement * movementSpeed * Time.deltaTime);
         if (cameraRelativeMovement != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(cameraRelativeMovement, Vector3.up);
