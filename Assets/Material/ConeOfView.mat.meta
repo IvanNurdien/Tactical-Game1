@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Material/ConeOfView.mat.meta
 guid: 6ffbf5211411367458e268d7d5c2b5f2
 NativeFormatImporter:
+========
+guid: 9a6d7534cfe8cb244a16537f19d71323
+DefaultImporter:
+>>>>>>>> Stashed changes:Assets/Scenes/Gameplay.unity.meta
   externalObjects: {}
   mainObjectFileID: 2100000
   userData: 
