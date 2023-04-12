@@ -17,6 +17,11 @@ public enum SpecialType
     Damage, Heal, Stun, Buff
 }
 
+public enum AttackType
+{
+    Circle, Donut, Arrow, All
+}
+
 public class MovementScript : MonoBehaviourPun
 {
     [System.Serializable]
@@ -57,15 +62,20 @@ public class MovementScript : MonoBehaviourPun
         }
     }
 
-    private ActionType actionType;
+    public ActionType actionType;
     public SpecialType specialType;
+    public AttackType attackType;
+
+    Vector3 position;
+    public bool isPicking = true;
+    public GameObject attackSource;
+
+
     [SerializeField] bool isSpecialUnlimitedRange = false;
     [SerializeField] bool isForOwnUnit = false;
 
     public Rigidbody rb;
-    float turnsmoothvelocity;
-    public float turnSmoothTime = 15f;
-    public CharacterController controller;
+
     [SerializeField] protected float movementSpeed = 10f;
     [SerializeField] protected float rotationSpeed = 360f;
     public bool canAttack = true;
@@ -84,6 +94,8 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] GameObject areaAtk;
     [SerializeField] GameObject areaSp;
 
+
+
     //public static MovementScript insMov;
 
     Animator anim;
@@ -94,6 +106,9 @@ public class MovementScript : MonoBehaviourPun
 
     private const byte GIVE_DAMAGE = 1;
     private const byte GIVE_HEAL = 2;
+
+    public GameObject tempSelected;
+    public GameObject tempDetected;
 
     private void Awake()
     {
@@ -106,14 +121,23 @@ public class MovementScript : MonoBehaviourPun
     }
     private void Update()
     {
-        MoveCharacter();
         AttackMode();
         SpecialMode();
     }
 
+    private void FixedUpdate()
+    {
+        MoveCharacter();
+
+    }
+
     void MoveCharacter()
     {
-        if (actionType != ActionType.Move) return;
+        if (actionType == ActionType.None || !isPicking)
+        {
+            areaTp.SetActive(false);
+            return;
+        }
         
         areaTp.SetActive(true);
         /*float horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -122,18 +146,44 @@ public class MovementScript : MonoBehaviourPun
         charController.Move(movDirection * movementSpeed * Time.deltaTime);*/
         MoveUnitRelativeToCamera();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             EndMove();
-        }
+        }*/
     }
 
     void AttackMode()
     {
         if (actionType != ActionType.Attack) return;
 
-        areaAtk.transform.position = this.transform.position;
-        areaAtk.SetActive(true);
+        if (attackType == AttackType.Circle)
+        {
+            areaAtk.transform.position = this.transform.position;
+            areaAtk.SetActive(true);
+        } else if (attackType == AttackType.Arrow)
+        {
+            areaAtk.transform.position = this.transform.position;
+            areaAtk.SetActive(true);
+
+            // ARROW TYPE ATTACK
+            if (isPicking)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+                }
+
+                //ARROW ROTATION
+                Quaternion transRot = Quaternion.LookRotation(position - transform.position);
+                transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+
+                areaAtk.transform.rotation = Quaternion.Lerp(transRot, areaAtk.transform.rotation, 0f);
+                transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
+            }
+        }
     }
 
     void SpecialMode()
@@ -185,9 +235,27 @@ public class MovementScript : MonoBehaviourPun
             List<GameObject> enemySurroundMe = areaAtk.GetComponent<AttackArea>().enemiesInRange;
             if (enemySurroundMe.Contains(selectedUnit))
             {
-                Debug.Log("yep boss he's in range");
-                target = selectedUnit;
-                pc.confirmAtk.SetActive(true);
+                Debug.Log("What you selected is " + selectedUnit.name);
+                tempSelected = selectedUnit;
+                RaycastHit hit;
+                
+                Vector3 raycastDir = selectedUnit.transform.position - attackSource.transform.position;
+
+                if (Physics.Raycast(attackSource.transform.position, raycastDir, out hit, Mathf.Infinity) && hit.transform.gameObject == selectedUnit)
+                {
+                    Debug.Log("yep boss he's in range");
+                    isPicking = false;
+                    target = selectedUnit;
+                    pc.confirmAtk.SetActive(true);
+                } else
+                {
+                    Debug.Log("and what i detected is " + hit.transform.name);
+                    tempDetected = hit.transform.gameObject;
+                    isPicking = true;
+                    target = null;
+                    pc.confirmAtk.SetActive(false);
+                }
+                
             }
             else
             {
@@ -306,11 +374,12 @@ public class MovementScript : MonoBehaviourPun
 
         // CREATE CAMERA-RELATIVE INPUT
         Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
-        rb.AddForce(cameraRelativeMovement * movementSpeed * Time.deltaTime);
+
+        transform.Translate(cameraRelativeMovement * movementSpeed * Time.fixedDeltaTime, Space.World);
         if (cameraRelativeMovement != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(cameraRelativeMovement, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.fixedDeltaTime);
             anim.SetFloat("isWalk", 1);
         }
         else
@@ -357,10 +426,12 @@ public class MovementScript : MonoBehaviourPun
         switch(at)
         {
             case ActionType.Move:
+                isPicking = true;
                 actionType = ActionType.Move;
                 break;
             case ActionType.Attack:
                 actionType = ActionType.Attack;
+                isPicking = true;
                 break;
             case ActionType.Special:
                 actionType = ActionType.Special;

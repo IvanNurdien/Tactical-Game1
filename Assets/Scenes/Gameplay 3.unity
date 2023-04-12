@@ -2421,7 +2421,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -3749,17 +3749,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e59212c70cba2b45b0625a5425d5d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: []
-  en: {fileID: 0}
-  state: 0
-  turnIndicator: {fileID: 0}
-  selectedChar: {fileID: 0}
-  anim: {fileID: 0}
-  turnTimeLimit: 15
-  panelPlayer: {fileID: 1340395790}
-  panelEnemy: {fileID: 1136704145}
-  box: {fileID: 0}
-  areaTp: {fileID: 0}
 --- !u!114 &1248608979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4323,7 +4312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1443372328
 MonoBehaviour:
   m_ObjectHideFlags: 0
