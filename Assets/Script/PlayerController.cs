@@ -240,8 +240,26 @@ public class PlayerController : MonoBehaviour
                         // SET THE SELECTED UNIT VARIABLE TO THE SELECTED UNIT AND
                         // ACTIVATES THE BATTLE MENU
                         CameraController.instance.followUnit = selectedUnit_.transform;
-                        selectedUnit = selectedUnit_;
+
+                        // TURNING ON THE INDICATORS
+                        if (selectedUnit == null)
+                        {
+                            selectedUnit = selectedUnit_;
+                            selectedUnit.GetComponent<SelectCharacter>().UnitSelect(true);
+                            MoveUnit(true);
+                        } else
+                        {
+                            MoveUnit(false);
+                            selectedUnit.GetComponent<SelectCharacter>().UnitSelect(false);
+                            selectedUnit = selectedUnit_;
+                            selectedUnit.GetComponent<SelectCharacter>().UnitSelect(true);
+                            MoveUnit(true);
+
+                        }
+
                         battleMenu.SetActive(true);
+
+                        // UI INDICATOR WHICH UNIT IS ACTIVE
                         var uiColor = unit.unitSpriteUI.color;
                         uiColor.a = 1f;
                         unit.unitSpriteUI.color = uiColor;
@@ -263,7 +281,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             CameraController.instance.followUnit = null;
+
+            MoveUnit(false);
+            selectedUnit.GetComponent<SelectCharacter>().UnitSelect(false);
             selectedUnit = null;
+
             battleMenu.SetActive(false);
             foreach (MyUnits unit in controlledUnits)
             {
@@ -274,17 +296,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void MoveUnit()
+    public void MoveUnit(bool isWalk)
     {
-        // GET MOVEMENT SCRIPT ON SELECTED UNIT AND CHANGE STATE TO MOVE
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
-        ms.ActionSwitch(ActionType.Move, this);
+        if (isWalk)
+        {
+            // GET MOVEMENT SCRIPT ON SELECTED UNIT AND CHANGE STATE TO MOVE
+            ms.ActionSwitch(ActionType.Move, this);
 
-        // DEACTIVATES BATTLE MENU WHEN MOVING
-        battleMenu.SetActive(false);
-        mouseSelect.isPickingUnit = false;
+            // DEACTIVATES BATTLE MENU WHEN MOVING
+            battleMenu.SetActive(true);
+            //mouseSelect.isPickingUnit = false;
 
-        Debug.Log("Fired");
+            Debug.Log("Fired");
+        } else
+        {
+            ms.ActionSwitch(ActionType.None, null);
+            battleMenu.SetActive(false);
+        }
+
     }
 
     public void UnitAttack()
@@ -326,6 +356,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             confirmAtk.SetActive(false);
+            ms.isPicking = true;
         }
     }
 

@@ -13,6 +13,15 @@ public class SelectCharacter : MonoBehaviour
     PhotonView view;
 
     public bool isPlayed = false;
+    bool isSelected;
+
+    Material indicatorMaterial;
+
+    [SerializeField] Color enemyColor;
+    [SerializeField] Color playedColor;
+    [SerializeField] Color hoverColor;
+
+    public GameObject unitInd;
 
     
     // Start is called before the first frame update
@@ -21,9 +30,41 @@ public class SelectCharacter : MonoBehaviour
         view = GetComponentInParent<PhotonView>();
         renderer = GetComponent<Renderer>();
 
+        indicatorMaterial = unitInd.GetComponent<SpriteRenderer>().material;
+
+
         playerTag = this.gameObject.tag;
 
         Debug.Log(playerTag);
+    }
+
+    private void Update()
+    {
+        if (isSelected)
+        {
+            unitInd.SetActive(true);
+        }
+    }
+
+    public void UnitSelect(bool unitSelected)
+    {
+        if (unitSelected)
+        {
+            indicatorMaterial.SetFloat("_Emission", 1);
+            isSelected = true;
+        } else
+        {
+            indicatorMaterial.SetFloat("_Emission", 0);
+            isSelected = false;
+            unitInd.SetActive(false);
+        }
+        
+    }
+
+    public void UnitUnselect()
+    {
+        
+
     }
 
 
@@ -34,20 +75,27 @@ public class SelectCharacter : MonoBehaviour
         {
             if (isPlayed)
             {
-                renderer.material.color = Color.yellow;
-            } else
+                Color tada = new Color(251, 255, 142);
+
+                unitInd.SetActive(true);
+                indicatorMaterial.SetColor("_MainColor", playedColor);
+            }
+            else
             {
-                renderer.material.color = Color.blue;
+                Color tada = new Color(142, 249, 253);
+
+                unitInd.SetActive(true);
+                indicatorMaterial.SetColor("_MainColor", hoverColor);
             }
             
         } else
         {
-            renderer.material.color = Color.red;
+            unitInd.SetActive(true);
         }
     }
 
     private void OnMouseExit()
     {
-        renderer.material.color = Color.white;
+        unitInd.SetActive(false);
     }
 }
