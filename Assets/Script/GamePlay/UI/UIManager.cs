@@ -14,7 +14,11 @@ public class UIManager : MonoBehaviour
     }
     public void Play()
     {
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene("Loading Screen");
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
     public void PlayMatch()
     {

@@ -3,7 +3,12 @@ guid: 8c9b2d05cfa1c6f40bd83da49ac41c74
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 194a950fa8e98924d88c76b85f365bf8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -16,7 +21,8 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 1
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Hips' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -80,7 +86,52 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Summoner(6)(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cube
+      parentName: Summoner(6)(Clone)
+      position: {x: -0.008895442, y: 14.182997, z: -0.000000013972353}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 254.02858, y: 254.02858, z: 254.02858}
+    - name: Light
+      parentName: Summoner(6)(Clone)
+      position: {x: -5.2721624, y: 5.7998686, z: -1.005454}
+      rotation: {x: 0.52327543, y: -0.34203392, z: 0.72694236, w: 0.28416622}
+      scale: {x: 100.00001, y: 100, z: 100}
+    - name: Camera
+      parentName: Summoner(6)(Clone)
+      position: {x: -8.554809, y: 4.8543158, z: 6.925791}
+      rotation: {x: 0.09062847, y: 0.89379627, z: -0.20997298, w: 0.3857799}
+      scale: {x: 100, y: 100.00001, z: 99.99999}
+    - name: depan
+      parentName: Summoner(6)(Clone)
+      position: {x: -19.169909, y: 9.57411, z: 0.00000042878145}
+      rotation: {x: 0.00000008146034, y: 0, z: -0, w: 1}
+      scale: {x: 1030.05, y: 1030.0548, z: 1030.0548}
+    - name: kiri
+      parentName: Summoner(6)(Clone)
+      position: {x: -7.330909, y: 9.801802, z: -9.614877}
+      rotation: {x: 0.000000057601174, y: -0.70710677, z: 0.00000005760117, w: 0.7071068}
+      scale: {x: 1030.05, y: 1030.05, z: 1030.05}
+    - name: belakang
+      parentName: Summoner(6)(Clone)
+      position: {x: -7.1977396, y: 9.719434, z: 0.0000013173741}
+      rotation: {x: 6.211317e-15, y: 1, z: -0.00000008146034, w: 0.0000000754979}
+      scale: {x: 1030.05, y: 1030.05, z: 1030.05}
+    - name: kanan
+      parentName: Summoner(6)(Clone)
+      position: {x: -7.330909, y: 9.889067, z: 3.0292609}
+      rotation: {x: 0.000000057601174, y: 0.70710677, z: -0.00000005760117, w: 0.7071068}
+      scale: {x: 1030.05, y: 1030.05, z: 1030.05}
+    - name: rambut
+      parentName: Summoner(6)(Clone)
+      position: {x: -0, y: 15.104654, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 277.4286, y: 277.4286, z: 277.4286}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
