@@ -6,11 +6,10 @@ using UnityEngine;
 
 public class SelectCharacter : MonoBehaviour
 {
-    private Renderer renderer;
-
     public string playerTag;
 
     PhotonView view;
+    MovementScript script;
 
     public bool isPlayed = false;
     bool isSelected;
@@ -28,9 +27,10 @@ public class SelectCharacter : MonoBehaviour
     void Start()
     {
         view = GetComponentInParent<PhotonView>();
-        renderer = GetComponent<Renderer>();
 
         indicatorMaterial = unitInd.GetComponent<SpriteRenderer>().material;
+
+        script = GetComponent<MovementScript>();
 
 
         playerTag = this.gameObject.tag;
@@ -57,14 +57,11 @@ public class SelectCharacter : MonoBehaviour
             indicatorMaterial.SetFloat("_Emission", 0);
             isSelected = false;
             unitInd.SetActive(false);
+            script.areaAtk.SetActive(false);
+            script.areaSp.SetActive(false);
+            script.areaTp.SetActive(false);
         }
         
-    }
-
-    public void UnitUnselect()
-    {
-        
-
     }
 
 
@@ -79,6 +76,8 @@ public class SelectCharacter : MonoBehaviour
 
                 unitInd.SetActive(true);
                 indicatorMaterial.SetColor("_MainColor", playedColor);
+                Debug.Log("Iam played and the mouse is on me");
+
             }
             else
             {
@@ -86,16 +85,21 @@ public class SelectCharacter : MonoBehaviour
 
                 unitInd.SetActive(true);
                 indicatorMaterial.SetColor("_MainColor", hoverColor);
+                Debug.Log("Iam not played and the mouse is on me");
+
             }
-            
+
         } else
         {
             unitInd.SetActive(true);
+            Debug.Log("Iam the enemy and the mouse is on me");
+
         }
     }
 
     private void OnMouseExit()
     {
         unitInd.SetActive(false);
+        Debug.Log("Mouse is not on me");
     }
 }

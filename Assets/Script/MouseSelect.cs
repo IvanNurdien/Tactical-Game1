@@ -37,14 +37,14 @@ public class MouseSelect : MonoBehaviour
                     {
                         pc.unitSelected(hitInfo.collider.gameObject);
                     }
-                    else if (!pc.isAttacking)
+                    else
                     {
                         CameraController.instance.followUnit = null;
 
                         pc.unitSelected(null);
                     }
                 }
-                else if (!pc.isAttacking)
+                else
                 {
                     CameraController.instance.followUnit = null;
 
