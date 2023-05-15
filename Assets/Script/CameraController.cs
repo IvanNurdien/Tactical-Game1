@@ -23,6 +23,11 @@ public class CameraController : MonoBehaviour
     public Vector3 dragCurrentPosition;
     public Vector3 rotateStartPosition;
     public Vector3 rotateCurrentPosition;
+
+    public Vector3 maxCamClamp;
+    public Vector3 minCamClamp;
+    public Vector3 maxZoomClamp;
+    public Vector3 minZoomClamp;
     // Start is called before the first frame update
     void Start()
     {
@@ -95,14 +100,15 @@ public class CameraController : MonoBehaviour
             Vector3 difference = rotateStartPosition - rotateCurrentPosition;
 
             rotateStartPosition = rotateCurrentPosition;
+            
 
             newRotation *= Quaternion.Euler(Vector3.up * (-difference.x / 5f));
         }
 
         // APPLY TO CAMERA
-        newPosition = new Vector3(Mathf.Clamp(newPosition.x, -16, 16), 2f, Mathf.Clamp(newPosition.z, -17, 26));
-        newZoom.y = Mathf.Clamp(newZoom.y, 6f, 19f);
-        newZoom.z = Mathf.Clamp(newZoom.z, -32.5f, -10f);
+        newPosition = new Vector3(Mathf.Clamp(newPosition.x, minCamClamp.x, maxCamClamp.x), 2f, Mathf.Clamp(newPosition.z, minCamClamp.z, maxCamClamp.z));
+        newZoom.y = Mathf.Clamp(newZoom.y, minZoomClamp.y, maxZoomClamp.y);
+        newZoom.z = Mathf.Clamp(newZoom.z, minZoomClamp.z, maxZoomClamp.z);
 
 
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);

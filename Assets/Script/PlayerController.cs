@@ -256,12 +256,23 @@ public class PlayerController : MonoBehaviour
     {
         if (!view.IsMine) return;
 
-        controlledUnits[0].IsUnitAvail = true;
-        controlledUnits[0].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
-        controlledUnits[1].IsUnitAvail = true;
-        controlledUnits[1].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
-        controlledUnits[2].IsUnitAvail = true;
-        controlledUnits[2].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+        foreach (MyUnits unit in controlledUnits)
+        {
+            unit.IsUnitAvail = true;
+            unit.Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+
+            if (unit.Unit.GetComponent<MovementScript>().unitBuffCounter.isBuffed)
+            {
+                int buffCounter = unit.Unit.GetComponent<MovementScript>().unitBuffCounter.turnCounter;
+                buffCounter--;
+                if (buffCounter <= 0)
+                {
+                    unit.Unit.GetComponent<MovementScript>().unitBuffCounter.isBuffed = false;
+                }
+            }
+        }
+
+        
         bd.TurnIndicator(true);
     }
 
@@ -398,7 +409,7 @@ public class PlayerController : MonoBehaviour
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
         if (accept)
         {
-            ms.AttackUnit();
+            ms.InitiateAttack();
             isAttacking = false;
             confirmAtk.SetActive(false);
 
@@ -416,7 +427,7 @@ public class PlayerController : MonoBehaviour
 
         if (accept)
         {
-            ms.SpecialUnit();
+            ms.InitiateSpecial();
             isSpecial = false;
             confirmSp.SetActive(false);
         } else
