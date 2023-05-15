@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1884216013254194021}
   - component: {fileID: 1884216013254194018}
   - component: {fileID: 1884216013254194019}
+  - component: {fileID: -5688134456782114839}
   m_Layer: 0
   m_Name: MagicianUpdated
   m_TagString: Untagged
@@ -444,6 +445,20 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!136 &-5688134456782114839
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650425960808533564}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 6.9
+  m_Height: 17.29085
+  m_Direction: 1
+  m_Center: {x: 0, y: 8.145419, z: -0.5000001}
 --- !u!1 &1745485706467684651
 GameObject:
   m_ObjectHideFlags: 0
