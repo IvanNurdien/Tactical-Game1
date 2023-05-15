@@ -1,8 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Anim/knuckler/UpdatedKnucklerAttackAnim.anim.meta
 guid: a9e47fcd48e62474b8b837018fb706e0
+========
+guid: 0eef47dd0e05c694ba1785d1f5b5ca33
+>>>>>>>> 090cdca9e4fa5f271c76ba2eb69733b364cfecb8:Assets/3D Envi/WOOD.mat.meta
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 0
+  mainObjectFileID: 2100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
