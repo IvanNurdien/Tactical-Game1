@@ -31,7 +31,8 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 1
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Hips' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -95,7 +96,37 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Knuckler(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cube
+      parentName: Knuckler(Clone)
+      position: {x: 0.036819458, y: 11.499165, z: 3.9841063}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 206.89421, y: 206.89421, z: 206.89421}
+    - name: Empty
+      parentName: Knuckler(Clone)
+      position: {x: -14.392181, y: -1.9963118, z: -0.0000024693315}
+      rotation: {x: 0.00000008146035, y: 0, z: -0, w: 1}
+      scale: {x: 938.0992, y: 938.0992, z: 938.0992}
+    - name: Gaunlet
+      parentName: Knuckler(Clone)
+      position: {x: 4.0975494, y: 6.995722, z: 9.772639}
+      rotation: {x: -0.25975883, y: -0.63793075, z: 0.68185085, w: 0.24627054}
+      scale: {x: 86.361015, y: 86.36103, z: 86.36102}
+    - name: Heandband
+      parentName: Knuckler(Clone)
+      position: {x: 0.04793167, y: 9.449591, z: 3.438166}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 319.0405, y: 319.0405, z: 319.0405}
+    - name: Rambut
+      parentName: Knuckler(Clone)
+      position: {x: 0.050682068, y: 12.14304, z: 3.8496635}
+      rotation: {x: -0.70710677, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 232.28052, y: 232.28052, z: 232.28052}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
