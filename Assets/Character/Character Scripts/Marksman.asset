@@ -15,7 +15,7 @@ MonoBehaviour:
   characterPrefab: {fileID: 2376723469232969665, guid: e714f15de67ccdd41b406a15fbfb66f3,
     type: 3}
   Description: joni
-  UnitName: Joko Tni
+  UnitName: Supporter
   unitNumber: 1003
   damage: 40
   maxHP: 50

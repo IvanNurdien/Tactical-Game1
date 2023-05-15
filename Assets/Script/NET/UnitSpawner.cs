@@ -51,8 +51,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 Sprite unitSprite = unit.gameplaySprite;
+                float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }
         foreach (var unit in unitList)
@@ -61,8 +62,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 Sprite unitSprite = unit.gameplaySprite;
+                float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }
         foreach (var unit in unitList)
@@ -71,8 +73,9 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
             {
                 GameObject unitToSpawn = unit.characterPrefab;
                 Sprite unitSprite = unit.gameplaySprite;
+                float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
-                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite));
+                pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }
     }

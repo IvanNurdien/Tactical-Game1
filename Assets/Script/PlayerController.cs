@@ -18,11 +18,13 @@ public class PlayerController : MonoBehaviour
         public bool IsUnitAvail = true;
         public Sprite unitSprite;
         public Image unitSpriteUI;
-        public MyUnits(GameObject unit, bool isUnitAvail, Sprite unitSprt)
+        public float unitHealth;
+        public MyUnits(GameObject unit, bool isUnitAvail, Sprite unitSprt, float unitHP)
         {
             Unit = unit;
             IsUnitAvail = isUnitAvail;
             unitSprite = unitSprt;
+            unitHealth = unitHP;
         }
     }
 
@@ -55,13 +57,15 @@ public class PlayerController : MonoBehaviour
 
     public bool isAttacking;
     public bool isSpecial;
+    public bool isForAlly;
 
-    const float maxHealth = 1000;
-    float currentHealth = maxHealth;
+    float maxHealth;
+    public float currentHealth;
 
     private const byte TAKE_DAMAGE = 1;
     private const byte TAKE_HEAL = 2;
     private const byte SYNC_UNITS = 3;
+    private const byte SYNC_HEALTH = 5;
 
 
     // SET PLAYER INFO
@@ -73,8 +77,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        
-
         mouseSelect = GetComponent<MouseSelect>();
         bd = GameObject.Find("Battle Director").GetComponent<BattleDirector>();
         view = GetComponent<PhotonView>();
@@ -88,16 +90,19 @@ public class PlayerController : MonoBehaviour
         }
         view.RPC("RPC_SetPlayerPosition", RpcTarget.AllBuffered);
 
-        // SYNC UNIT SPRITES
+        maxHealth = controlledUnits[0].unitHealth + controlledUnits[1].unitHealth + controlledUnits[2].unitHealth;
+        currentHealth = maxHealth;
+
+        // SYNC UNIT SPRITES AND HEALTH
         string firstSprite = controlledUnits[0].unitSprite.name;
         string secondSprite = controlledUnits[1].unitSprite.name;
         string thirdSprite = controlledUnits[2].unitSprite.name;
 
         float myViewID = view.ViewID;
-        object[] datas = new object[] { myViewID, firstSprite, secondSprite, thirdSprite };
+        object[] datas = new object[] { myViewID, firstSprite, secondSprite, thirdSprite, currentHealth };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
 
         PhotonNetwork.RaiseEvent(SYNC_UNITS, datas, raiseEventOptions, SendOptions.SendReliable);
 
@@ -111,6 +116,21 @@ public class PlayerController : MonoBehaviour
         controlledUnits[1].unitSpriteUI = secondUnitImage;
         controlledUnits[2].unitSpriteUI = thirdUnitImage;
 
+        
+        
+
+        if (view.IsMine)
+        {
+            if (thisTurn)
+            {
+                bd.TurnIndicator(true);
+            }
+            else
+            {
+                bd.TurnIndicator(false);
+
+            }
+        }
     }
 
     [PunRPC]
@@ -165,6 +185,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("I have received " + damageReceived + "pts of damage!");
                 currentHealth -= damageReceived;
                 healthbarImage.fillAmount = currentHealth / maxHealth;
+                CheckPlayerHealth();
             }
         } else if (obj.Code == SYNC_UNITS)
         {
@@ -174,6 +195,7 @@ public class PlayerController : MonoBehaviour
             string firstSprite = (string)datas[1];
             string secondSprite = (string)datas[2];
             string thirdSprite = (string)datas[3];
+            float healthAmount = (float)datas[4];
             if (view.ViewID == myViewID)
             {
                 Debug.Log("Yep it is fired");
@@ -181,10 +203,29 @@ public class PlayerController : MonoBehaviour
                 firstUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + firstSprite);
                 secondUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + secondSprite);
                 thirdUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + thirdSprite);
+
+                currentHealth = healthAmount;
+            }
+        } else if (obj.Code == TAKE_HEAL)
+        {
+            // HEAL PLAYER
+            object[] datas = (object[])obj.CustomData;
+            float targetViewID = (float)datas[0];
+            int healAmount = (int)datas[1];
+
+            if (view.ViewID == targetViewID)
+            {
+                currentHealth += healAmount;
+                healthbarImage.fillAmount = currentHealth / maxHealth;
             }
         }
-        {
+    }
 
+    public void CheckPlayerHealth()
+    {
+        if (currentHealth <= 0)
+        {
+            bd.PlayerLose();
         }
     }
 
@@ -200,10 +241,13 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Nah u dont have any units left");
             view.RPC("RPC_SwitchTurn", RpcTarget.AllBuffered);
+            bd.TurnIndicator(false);
         } else
         {
             Debug.Log("U good");
-
+            isAttacking = false;
+            isSpecial = false;
+            isForAlly = false;
         }
     }
 
@@ -218,6 +262,7 @@ public class PlayerController : MonoBehaviour
         controlledUnits[1].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
         controlledUnits[2].IsUnitAvail = true;
         controlledUnits[2].Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+        bd.TurnIndicator(true);
     }
 
     public void unitSelected(GameObject selectedUnit_)
@@ -226,14 +271,14 @@ public class PlayerController : MonoBehaviour
         {
             // CHECK IF THIS UNIT IS MINE OR NOT
             PhotonView unitView = selectedUnit_.GetComponentInParent<PhotonView>();
-            if (unitView.IsMine)
+            if (unitView.IsMine && !isSpecial)
             {
                 GameObject unitName = selectedUnit_.transform.parent.gameObject;
 
                 // CHECK IF UNITS HAS BEEN PLAYED OR NOT
                 foreach (MyUnits unit in controlledUnits)
                 {
-                    if (unit.Unit == unitName && unit.IsUnitAvail && !isAttacking)
+                    if (unit.Unit == unitName && unit.IsUnitAvail)
                     {
                         Debug.Log("This is it chief");
 
@@ -254,7 +299,6 @@ public class PlayerController : MonoBehaviour
                             selectedUnit = selectedUnit_;
                             selectedUnit.GetComponent<SelectCharacter>().UnitSelect(true);
                             MoveUnit(true);
-
                         }
 
                         battleMenu.SetActive(true);
@@ -263,6 +307,7 @@ public class PlayerController : MonoBehaviour
                         var uiColor = unit.unitSpriteUI.color;
                         uiColor.a = 1f;
                         unit.unitSpriteUI.color = uiColor;
+                        
                     } else
                     {
                         var uiColor = unit.unitSpriteUI.color;
@@ -270,10 +315,12 @@ public class PlayerController : MonoBehaviour
                         unit.unitSpriteUI.color = uiColor;
                     }
                 }
+                isAttacking = false;
+                isSpecial = false;
             } else if (isAttacking)
             {
                 selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
-            } else if (isSpecial || unitView.IsMine)
+            } else if (isSpecial || (unitView.IsMine && isForAlly))
             {
                 selectedUnit.GetComponent<MovementScript>().CheckIfEnemyOnRange(selectedUnit_);
             }
@@ -285,6 +332,9 @@ public class PlayerController : MonoBehaviour
             MoveUnit(false);
             selectedUnit.GetComponent<SelectCharacter>().UnitSelect(false);
             selectedUnit = null;
+
+            isAttacking = false;
+            isSpecial = false;
 
             battleMenu.SetActive(false);
             foreach (MyUnits unit in controlledUnits)
@@ -331,7 +381,7 @@ public class PlayerController : MonoBehaviour
     public void UnitSpecial()
     {
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
-        ms.ActionSwitch(ActionType.Special, this);
+        isForAlly = ms.ActionSwitch(ActionType.Special, this);
         isSpecial = true;
 
         battleMenu.SetActive(false);
