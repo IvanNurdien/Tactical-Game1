@@ -102,7 +102,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void OnClickPlay()
     {
-        PhotonNetwork.LoadLevel("Gameplay 3");
+        PhotonNetwork.LoadLevel("Gameplay 4");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

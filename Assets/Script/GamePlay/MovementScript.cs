@@ -103,6 +103,7 @@ public class MovementScript : MonoBehaviourPun
     SelectCharacter sc;
 
     private const byte GIVE_DAMAGE = 1;
+    private const byte GIVE_BUFF = 4;
     private const byte GIVE_HEAL = 2;
 
 
@@ -122,6 +123,7 @@ public class MovementScript : MonoBehaviourPun
     {
         AttackMode();
         SpecialMode();
+        UnitBuffed();
     }
 
     private void FixedUpdate()
@@ -154,8 +156,23 @@ public class MovementScript : MonoBehaviourPun
             // CHECK IF IM ATTACKED
             if (unitView.ViewID == enemyViewID)
             {
-                anim.SetTrigger("isHurt");
                 Debug.Log("The one hurting is " + transform.parent.name );
+            }
+        } else if (obj.Code == GIVE_BUFF)
+        {
+            // TAKE BUFF COMMAND
+            object[] datas = (object[])obj.CustomData;
+
+            int buffAmount = (int)datas[0];
+            float allyUnitView = (float)datas[1];
+
+            PhotonView unitView = this.GetComponentInParent<PhotonView>();
+            // CHECK IF ITS THE SAME UNIT
+            if (unitView.ViewID == allyUnitView)
+            {
+                unitBuffCounter.isBuffed = true;
+                unitBuffCounter.turnCounter = 4;
+                unitBuffCounter.buffAmount = buffAmount;
             }
         }
     }
@@ -356,9 +373,18 @@ public class MovementScript : MonoBehaviourPun
         }
     }
 
-    public void AttackUnit()
+    public void InitiateAttack()
     {
         areaAtk.SetActive(false);
+        
+
+        anim.SetTrigger("isAttack");
+    }
+
+    public void AttackUnit()
+    {
+        target.GetComponent<Animator>().SetTrigger("isHurt");
+
         int baseDamage = unitAtkDamage.baseDamage;
         int maxDamage = unitAtkDamage.maxDamage;
 
@@ -371,15 +397,22 @@ public class MovementScript : MonoBehaviourPun
         // END BUFF DAMAGE
 
         int damage = Random.Range(baseDamage, maxDamage);
-        Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
 
-        anim.SetTrigger("isAttack");
         float myViewID = pc.view.ViewID;
         float enemyUnitViewID = target.transform.parent.GetComponent<PhotonView>().ViewID;
-        object[] datas = new object[] { myViewID , damage , enemyUnitViewID };
+        object[] datas = new object[] { myViewID, damage, enemyUnitViewID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas,raiseEventOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas, raiseEventOptions, SendOptions.SendReliable);
         EndMove();
+        Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
+
+    }
+
+    public void InitiateSpecial()
+    {
+        areaSp.SetActive(false);
+
+        anim.SetTrigger("isSpecial");
     }
 
     public void SpecialUnit()
@@ -395,12 +428,17 @@ public class MovementScript : MonoBehaviourPun
         {
             case SpecialType.Buff:
                 areaSp.SetActive(false);
-                target.GetComponent<MovementScript>().unitBuffCounter.isBuffed = true;
-                target.GetComponent<MovementScript>().unitBuffCounter.turnCounter = 4;
-                target.GetComponent<MovementScript>().unitBuffCounter.buffAmount = targetBuffAmount;
+                baseDamage = targetBuffAmount;
+                enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
+                datas = new object[] { baseDamage, enemyUnitViewID };
+                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(GIVE_BUFF, datas, raiseEventOptions, SendOptions.SendReliable);
+
+
                 Debug.Log(target.transform.parent.name + " is buffed!");
                 EndMove();
                 break;
+
             case SpecialType.Damage_A:
                 // LIST ALL THE UNITS SURROUNDING
                 List<GameObject> unitSurroundMe = areaSp.GetComponent<AttackArea>().enemiesInRange;
@@ -418,14 +456,14 @@ public class MovementScript : MonoBehaviourPun
                 // END BUFF DAMAGE
 
                 int damage = Random.Range(baseDamage, maxDamage);
-
-                anim.SetTrigger("isAttack");
                 // DAMAGES ALL THE ENEMY SURROUNDING ME
                 foreach (GameObject unit in unitSurroundMe)
                 {
                     PhotonView unitView = unit.GetComponentInParent<PhotonView>();
                     if (!unitView.IsMine)
                     {
+                        unit.GetComponent<Animator>().SetTrigger("isHurt");
+
                         myViewID = pc.view.ViewID;
                         enemyUnitViewID = unit.transform.parent.GetComponent<PhotonView>().ViewID;
                         datas = new object[] { myViewID, damage, enemyUnitViewID };
@@ -436,6 +474,7 @@ public class MovementScript : MonoBehaviourPun
                 }
                 EndMove();
                 break;
+
             case SpecialType.Damage_T:
                 areaSp.SetActive(false);
                 baseDamage = playerSpecialAmount.baseAmount;
@@ -449,17 +488,27 @@ public class MovementScript : MonoBehaviourPun
                 }
                 // END BUFF DAMAGE
 
-                anim.SetTrigger("isAttack");
 
                 damage = Random.Range(baseDamage, maxDamage);
                 myViewID = pc.view.ViewID;
-                enemyUnitViewID = target.transform.parent.GetComponent<PhotonView>().ViewID;
+                enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
                 datas = new object[] { myViewID, damage, enemyUnitViewID };
 
                 raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
                 PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas, raiseEventOptions, SendOptions.SendReliable);
                 EndMove();
                 break;
+        }
+    }
+
+    void UnitBuffed()
+    {
+        if (unitBuffCounter.isBuffed)
+        {
+            // Activates something
+        } else
+        {
+            // Deactivates something
         }
     }
 
