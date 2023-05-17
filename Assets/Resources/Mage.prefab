@@ -3974,6 +3974,7 @@ GameObject:
   - component: {fileID: 5867520160060264475}
   - component: {fileID: 5867520160060264468}
   - component: {fileID: 8623437823646927495}
+  - component: {fileID: -6067952943845346206}
   m_Layer: 0
   m_Name: Mage
   m_TagString: Untagged
@@ -4074,6 +4075,47 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-6067952943845346206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867520160060264470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d5f8a99441e7ee46b578d10ad629b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionType: 0
+  specialType: 0
+  attackType: 0
+  areaTp: {fileID: 0}
+  areaAtk: {fileID: 0}
+  areaSp: {fileID: 0}
+  attackSource: {fileID: 0}
+  isSpecialUnlimitedRange: 0
+  isForAlly: 0
+  playerSpecialAmount:
+    baseAmount: 0
+    maxAmount: 0
+  unitAtkDamage:
+    baseDamage: 0
+    maxDamage: 0
+  unitBuffCounter:
+    isBuffed: 0
+    buffAmount: 0
+    turnCounter: 0
+  canAttack: 1
+  isPicking: 1
+  movementSpeed: 10
+  rotationSpeed: 360
+  targetBuffAmount: 10
+  rb: {fileID: 0}
+  target: {fileID: 0}
+  pc: {fileID: 0}
+  tempSelected: {fileID: 0}
+  tempDetected: {fileID: 0}
 --- !u!1 &5867520160417258365
 GameObject:
   m_ObjectHideFlags: 0
