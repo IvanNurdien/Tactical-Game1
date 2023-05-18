@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b098aec6eccc4dbe726d909d8d0c3, type: 3}
   m_Name: Supporter
   m_EditorClassIdentifier: 
-  characterPrefab: {fileID: 5148514182178594643, guid: 930bb2842b18b4147ac95b5513608b5a,
+  characterPrefab: {fileID: 2376723469232969665, guid: e714f15de67ccdd41b406a15fbfb66f3,
     type: 3}
   Description: joni
   UnitName: Supporter

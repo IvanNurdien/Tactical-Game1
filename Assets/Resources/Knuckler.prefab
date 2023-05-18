@@ -559,7 +559,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: d0d71ea9748aadc44a14c82060f2d205, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
@@ -3981,7 +3981,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6590
+  m_VersionIndex: 6593
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
