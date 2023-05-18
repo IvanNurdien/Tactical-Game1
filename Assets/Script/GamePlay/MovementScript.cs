@@ -207,6 +207,15 @@ public class MovementScript : MonoBehaviourPun
         areaAtk.SetActive(true);
 
         //ARROW ROTATION
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+        }
+
+        //ARROW ROTATION
         Quaternion transRot = Quaternion.LookRotation(position - transform.position);
         transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
         transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
