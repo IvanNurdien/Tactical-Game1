@@ -7,6 +7,7 @@ using TMPro;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using Doozy.Runtime.UIManager;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -66,6 +67,8 @@ public class PlayerController : MonoBehaviour
     private const byte TAKE_HEAL = 2;
     private const byte SYNC_UNITS = 3;
     private const byte SYNC_HEALTH = 5;
+    private const byte GIVE_STUN = 8;
+
 
 
     // SET PLAYER INFO
@@ -258,18 +261,46 @@ public class PlayerController : MonoBehaviour
 
         foreach (MyUnits unit in controlledUnits)
         {
-            unit.IsUnitAvail = true;
-            unit.Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+            
+            MovementScript unitMS = unit.Unit.GetComponentInChildren<MovementScript>();
 
-            if (unit.Unit.GetComponent<MovementScript>().unitBuffCounter.isBuffed)
+            if (unitMS.isStunned)
             {
-                int buffCounter = unit.Unit.GetComponent<MovementScript>().unitBuffCounter.turnCounter;
+                unit.IsUnitAvail = false;
+                unit.Unit.GetComponentInChildren<SelectCharacter>().isPlayed = true;
+
+                unitMS.stunCounter--;
+                if (unitMS.stunCounter <= 0)
+                {
+                    float myViewID = view.ViewID;
+                    float enemyUnitViewID = unit.Unit.GetComponent<PhotonView>().ViewID;
+                    bool stun = false;
+                    object[] datas = new object[] { myViewID, enemyUnitViewID, stun };
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    PhotonNetwork.RaiseEvent(GIVE_STUN, datas, raiseEventOptions, SendOptions.SendReliable);
+                    
+                    unitMS.isStunned = false;
+                    unit.IsUnitAvail = true;
+                    unit.Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+                }
+            } else
+            {
+                unit.IsUnitAvail = true;
+                unit.Unit.GetComponentInChildren<SelectCharacter>().isPlayed = false;
+            }
+
+            if (unitMS.unitBuffCounter.isBuffed)
+            {
+                int buffCounter = unitMS.unitBuffCounter.turnCounter;
                 buffCounter--;
                 if (buffCounter <= 0)
                 {
-                    unit.Unit.GetComponent<MovementScript>().unitBuffCounter.isBuffed = false;
+                    unitMS.unitBuffCounter.isBuffed = false;
                 }
             }
+
+            
         }
 
         

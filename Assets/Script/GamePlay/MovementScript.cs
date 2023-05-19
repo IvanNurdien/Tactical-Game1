@@ -74,7 +74,10 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] bool isSpecialUnlimitedRange = false;
     [SerializeField] bool isForAlly = false;
 
-
+    [Header("Unit Statuses")]
+    public GameObject stunInd;
+    public bool isStunned;
+    public int stunCounter = 2;
 
     [Header("Action Amounts")]
     public specialAmount playerSpecialAmount;
@@ -104,6 +107,7 @@ public class MovementScript : MonoBehaviourPun
 
     private const byte GIVE_DAMAGE = 1;
     private const byte GIVE_BUFF = 4;
+    private const byte GIVE_STUN = 8;
     private const byte GIVE_HEAL = 2;
 
 
@@ -124,6 +128,7 @@ public class MovementScript : MonoBehaviourPun
         AttackMode();
         SpecialMode();
         UnitBuffed();
+        UnitStunned();
     }
 
     private void FixedUpdate()
@@ -174,6 +179,20 @@ public class MovementScript : MonoBehaviourPun
                 unitBuffCounter.turnCounter = 4;
                 unitBuffCounter.buffAmount = buffAmount;
             }
+        } else if (obj.Code == GIVE_STUN)
+        {
+            // TAKE STUN COMMAND
+            object[] datas = (object[])obj.CustomData;
+
+            float enemyViewID = (float)datas[1];
+            bool stun = (bool)datas[2];
+
+            PhotonView unitView = GetComponentInParent<PhotonView>();
+            // CHECK IF THIS UNIT IS STUNNED
+            if (unitView.ViewID == enemyViewID)
+            {
+                isStunned = stun;
+            }
         }
     }
 
@@ -206,19 +225,23 @@ public class MovementScript : MonoBehaviourPun
         areaAtk.transform.position = this.transform.position;
         areaAtk.SetActive(true);
 
-        //ARROW ROTATION
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (isPicking)
         {
-            position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-        }
+            //ARROW ROTATION
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        //ARROW ROTATION
-        Quaternion transRot = Quaternion.LookRotation(position - transform.position);
-        transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
-        transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+            }
+
+            //ARROW ROTATION
+            Quaternion transRot = Quaternion.LookRotation(position - transform.position);
+            transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
+        }
+        
 
     }
 
@@ -259,12 +282,9 @@ public class MovementScript : MonoBehaviourPun
                 isTargetEnemy = false;
                 break;
             case SpecialType.Heal:
-                int heal = Random.Range(playerSpecialAmount.baseAmount, playerSpecialAmount.maxAmount);
-                float myViewID = pc.view.ViewID;
-                object[] datas = new object[] { myViewID, heal };
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                PhotonNetwork.RaiseEvent(GIVE_HEAL, datas, raiseEventOptions, SendOptions.SendReliable);
-                EndMove();
+                isPicking = false;
+                ActionSwitch(ActionType.None, pc);
+                pc.confirmSp.SetActive(true);
                 break;
         }
 
@@ -385,7 +405,10 @@ public class MovementScript : MonoBehaviourPun
     public void InitiateAttack()
     {
         areaAtk.SetActive(false);
-        
+
+        Quaternion transRot = Quaternion.LookRotation(target.transform.position - transform.position);
+        transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+        transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
 
         anim.SetTrigger("isAttack");
     }
@@ -393,7 +416,7 @@ public class MovementScript : MonoBehaviourPun
     public void AttackUnit()
     {
         target.GetComponent<Animator>().SetTrigger("isHurt");
-
+        
         int baseDamage = unitAtkDamage.baseDamage;
         int maxDamage = unitAtkDamage.maxDamage;
 
@@ -485,6 +508,8 @@ public class MovementScript : MonoBehaviourPun
                 break;
 
             case SpecialType.Damage_T:
+                target.GetComponent<Animator>().SetTrigger("isHurt");
+
                 areaSp.SetActive(false);
                 baseDamage = playerSpecialAmount.baseAmount;
                 maxDamage = playerSpecialAmount.maxAmount;
@@ -507,6 +532,38 @@ public class MovementScript : MonoBehaviourPun
                 PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas, raiseEventOptions, SendOptions.SendReliable);
                 EndMove();
                 break;
+            case SpecialType.Heal:
+                int heal = Random.Range(playerSpecialAmount.baseAmount, playerSpecialAmount.maxAmount);
+                myViewID = pc.view.ViewID;
+                datas = new object[] { myViewID, heal };
+                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(GIVE_HEAL, datas, raiseEventOptions, SendOptions.SendReliable);
+                EndMove();
+                break;
+            case SpecialType.Stun:
+                myViewID = pc.view.ViewID;
+                enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
+                bool stun = true;
+                datas = new object[] { myViewID, enemyUnitViewID, stun };
+
+                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(GIVE_STUN, datas, raiseEventOptions, SendOptions.SendReliable);
+                EndMove();
+                break;
+             
+        }
+    }
+
+    void UnitStunned()
+    {
+        if (isStunned)
+        {
+            stunInd.SetActive(true);
+            sc.isPlayed = true;
+        } else
+        {
+            stunInd.SetActive(false);
+            stunCounter = 2;
         }
     }
 
