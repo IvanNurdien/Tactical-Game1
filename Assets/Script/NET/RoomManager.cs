@@ -39,6 +39,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
         }
 
+
+        // ACTIVATE THIS WHEN DONE  
         /*if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
             if (player1Ready && player2Ready)
@@ -49,6 +51,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 startButton.SetActive(false);
             }
+        } else
+        {
+            startButton.SetActive(false);
         }*/
     }
 
@@ -94,8 +99,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 PhotonView buttonPV = button.GetComponent<PhotonView>();
                 int buttonID = button.GetComponent<UnitButton>().units.unitNumber;
 
-                button.transform.Find("Player1Chosen").gameObject.SetActive(true);
-                button.GetComponent<UnitButton>().SelectedByOtherPlayer(true);
+                //button.transform.Find("Player1Chosen").gameObject.SetActive(true);
+                //button.GetComponent<UnitButton>().SelectedByOtherPlayer(true);
             }
         }
     }

@@ -9,19 +9,38 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
     public TMP_InputField createInput;
     public TMP_InputField joinInput;
-
+    public TMP_InputField usernameInput;
+    public GameObject usernameWarning;
 
     public void CreateRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        /*roomOptions.MaxPlayers = 2;
-        roomOptions.BroadcastPropsChangeToAll = true;*/
-        PhotonNetwork.CreateRoom(createInput.text, new RoomOptions() { MaxPlayers = 2, BroadcastPropsChangeToAll = true });
+        if (usernameInput.text.Length >= 1)
+        {
+            PhotonNetwork.NickName = usernameInput.text;
+
+            RoomOptions roomOptions = new RoomOptions();
+            /*roomOptions.MaxPlayers = 2;
+            roomOptions.BroadcastPropsChangeToAll = true;*/
+            PhotonNetwork.CreateRoom(createInput.text, new RoomOptions() { MaxPlayers = 2, BroadcastPropsChangeToAll = true });
+        } else
+        {
+            usernameWarning.SetActive(true);
+        }
+
+        
     }
 
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(joinInput.text);
+        if (usernameInput.text.Length >= 1)
+        {
+            PhotonNetwork.NickName = usernameInput.text;
+
+            PhotonNetwork.JoinRoom(joinInput.text);
+        } else
+        {
+            usernameWarning.SetActive(true);
+        }
     }
 
     public override void OnJoinedRoom()

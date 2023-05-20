@@ -15,9 +15,12 @@ MonoBehaviour:
   characterPrefab: {fileID: 2376723469232969665, guid: e714f15de67ccdd41b406a15fbfb66f3,
     type: 3}
   Description: joni
-  UnitName: Supporter
+  UnitName: Rakev
   unitNumber: 1006
   damage: 40
+  spType: 0
+  moveRange: 0
+  attackRange: 0
   maxHP: 150
   currentHp: 150
   characterSelectSprite: {fileID: 21300000, guid: 6adfaaf8f228e9448b3c32623c107c0c,

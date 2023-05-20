@@ -12,14 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b098aec6eccc4dbe726d909d8d0c3, type: 3}
   m_Name: Student
   m_EditorClassIdentifier: 
-  characterPrefab: {fileID: 2376723469232969665, guid: e714f15de67ccdd41b406a15fbfb66f3,
+  characterPrefab: {fileID: 4563119487643573275, guid: 5a12a3dcb835d3842b9f854159b06d83,
     type: 3}
   Description: joni
-  UnitName: Supporter
+  UnitName: Indah
   unitNumber: 1004
-  damage: 40
-  maxHP: 50
+  damage: 30
+  spType: 4
+  moveRange: 1
+  attackRange: 0
+  maxHP: 160
   currentHp: 50
-  characterSelectSprite: {fileID: 21300000, guid: 76b73d6a1938a454d887dd15f0aca19c,
+  characterSelectSprite: {fileID: 21300000, guid: 174e317b56d1ed9459d9aa239b9f619a,
     type: 3}
-  gameplaySprite: {fileID: 21300000, guid: c7359d3a166265744a4f411bb3dec295, type: 3}
+  gameplaySprite: {fileID: 21300000, guid: c5204b652024165428752150fd4414d0, type: 3}

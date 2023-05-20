@@ -15,9 +15,12 @@ MonoBehaviour:
   characterPrefab: {fileID: 8587852148950907714, guid: 57a364a241fc69740abeeecb1536ace0,
     type: 3}
   Description: joni
-  UnitName: Magician
+  UnitName: Rara
   unitNumber: 1003
   damage: 40
+  spType: 3
+  moveRange: 1
+  attackRange: 1
   maxHP: 160
   currentHp: 160
   characterSelectSprite: {fileID: 21300000, guid: 76b73d6a1938a454d887dd15f0aca19c,

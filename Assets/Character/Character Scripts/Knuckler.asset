@@ -15,9 +15,12 @@ MonoBehaviour:
   characterPrefab: {fileID: 4563119487643573275, guid: c9125976b2251384d81d3e0bcbd7698a,
     type: 3}
   Description: shiro oni merupakan pembantai yang tak terkalahkan
-  UnitName: Knuckler
+  UnitName: Ali
   unitNumber: 1001
-  damage: 100
+  damage: 50
+  spType: 1
+  moveRange: 2
+  attackRange: 0
   maxHP: 170
   currentHp: 100
   characterSelectSprite: {fileID: 21300000, guid: 3d4c5d6fcd7124c4b967feec326b78e0,

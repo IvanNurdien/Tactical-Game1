@@ -8,6 +8,7 @@ using ExitGames.Client.Photon;
 using UnityEngine.UI;
 using Doozy.Runtime.UIManager;
 using static UnityEngine.GraphicsBuffer;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class PlayerController : MonoBehaviour
             unitHealth = unitHP;
         }
     }
+
+    public TMP_Text playerName;
+    public Image attackSprite;
+    public Image specialSprite;
 
     public Image firstUnitImage;
     public Image secondUnitImage;
@@ -66,8 +71,12 @@ public class PlayerController : MonoBehaviour
     private const byte TAKE_DAMAGE = 1;
     private const byte TAKE_HEAL = 2;
     private const byte SYNC_UNITS = 3;
+    //private const byte SYNC_UNITS = 35;
     private const byte SYNC_HEALTH = 5;
     private const byte GIVE_STUN = 8;
+    private const byte GIVE_ALL_BUFF = 10;
+    private const byte GIVE_BUFF = 4;
+    private const byte STAGGER = 9;
 
 
 
@@ -83,6 +92,14 @@ public class PlayerController : MonoBehaviour
         mouseSelect = GetComponent<MouseSelect>();
         bd = GameObject.Find("Battle Director").GetComponent<BattleDirector>();
         view = GetComponent<PhotonView>();
+
+        playerName.text = view.Owner.NickName;
+
+        if (view.IsMine)
+        {
+            bd.assignedPlayerID = view.ViewID;
+        }
+
 
         if (view.Owner.IsMasterClient)
         {
@@ -102,7 +119,7 @@ public class PlayerController : MonoBehaviour
         string thirdSprite = controlledUnits[2].unitSprite.name;
 
         float myViewID = view.ViewID;
-        object[] datas = new object[] { myViewID, firstSprite, secondSprite, thirdSprite, currentHealth };
+        object[] datas = new object[] { myViewID, firstSprite, secondSprite, thirdSprite, currentHealth, maxHealth };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
 
         yield return new WaitForSeconds(5f);
@@ -187,8 +204,17 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("I have received " + damageReceived + "pts of damage!");
                 currentHealth -= damageReceived;
+
+                // SYNC HEALTH ONLY
+                float myViewID = view.ViewID;
+                object[] newDatas = new object[] { myViewID, currentHealth, maxHealth };
+
                 healthbarImage.fillAmount = currentHealth / maxHealth;
-                CheckPlayerHealth();
+
+                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(SYNC_HEALTH, newDatas, raiseEventOptions, SendOptions.SendReliable);
+
+
             }
         } else if (obj.Code == SYNC_UNITS)
         {
@@ -199,6 +225,7 @@ public class PlayerController : MonoBehaviour
             string secondSprite = (string)datas[2];
             string thirdSprite = (string)datas[3];
             float healthAmount = (float)datas[4];
+            float maxHealth_ = (float)datas[5];
             if (view.ViewID == myViewID)
             {
                 Debug.Log("Yep it is fired");
@@ -208,8 +235,29 @@ public class PlayerController : MonoBehaviour
                 thirdUnitImage.sprite = Resources.Load<Sprite>("Character Sprites/" + thirdSprite);
 
                 currentHealth = healthAmount;
+                maxHealth = maxHealth_;
             }
-        } else if (obj.Code == TAKE_HEAL)
+        } else if (obj.Code == SYNC_HEALTH)
+        {
+
+            object[] datas = (object[])obj.CustomData;
+
+            float myViewID = (float)datas[0];
+
+            float healthAmount = (float)datas[1];
+            float maxHealth_ = (float)datas[2];
+
+            if (view.ViewID == myViewID)
+            {
+                currentHealth = healthAmount;
+                maxHealth = maxHealth_;
+
+                healthbarImage.fillAmount = currentHealth / maxHealth;
+
+                CheckPlayerHealth();
+            }
+        }
+        else if (obj.Code == TAKE_HEAL)
         {
             // HEAL PLAYER
             object[] datas = (object[])obj.CustomData;
@@ -221,6 +269,27 @@ public class PlayerController : MonoBehaviour
                 currentHealth += healAmount;
                 healthbarImage.fillAmount = currentHealth / maxHealth;
             }
+        } else if (obj.Code == GIVE_ALL_BUFF)
+        {
+            object[] datas = (object[])obj.CustomData;
+            int buffAmount = (int)datas[0];
+            float targetViewID = (float)datas[1];
+
+            if (view.ViewID == targetViewID)
+            {
+                foreach (MyUnits units in controlledUnits)
+                {
+                    PhotonView unitView = units.Unit.GetComponent<PhotonView>();
+                    if (unitView.IsMine)
+                    {
+                        float unitViewID = unitView.ViewID;
+                        bool givingBuff = true;
+                        object[] newDatas = new object[] { buffAmount, unitViewID, givingBuff };
+                        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                        PhotonNetwork.RaiseEvent(GIVE_BUFF, newDatas, raiseEventOptions, SendOptions.SendReliable);
+                    }
+                }
+            }
         }
     }
 
@@ -228,7 +297,7 @@ public class PlayerController : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
-            bd.PlayerLose();
+            bd.PlayerLose(view.ViewID);
         }
     }
 
@@ -296,14 +365,37 @@ public class PlayerController : MonoBehaviour
                 buffCounter--;
                 if (buffCounter <= 0)
                 {
+                    int buffAmount = 0;
+                    float unitViewID = unit.Unit.GetComponent<PhotonView>().ViewID;
+                    bool givingBuff = false;
+                    object[] datas = new object[] { buffAmount, unitViewID, givingBuff };
+
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    PhotonNetwork.RaiseEvent(GIVE_BUFF, datas, raiseEventOptions, SendOptions.SendReliable);
+
                     unitMS.unitBuffCounter.isBuffed = false;
+
                 }
             }
 
-            
-        }
+            if (unitMS.isStaggered)
+            {
+                unitMS.staggeredCounter--;
+                if (unitMS.staggeredCounter <= 0)
+                {
+                    float myUnitViewID = unit.Unit.GetComponent<PhotonView>().ViewID;
+                    bool stagger = false;
+                    object[] datas = new object[] { myUnitViewID, stagger };
 
-        
+                    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    PhotonNetwork.RaiseEvent(STAGGER, datas, raiseEventOptions, SendOptions.SendReliable);
+
+                    unitMS.isStaggered = false;
+                    unitMS.staggeredCounter = 2;
+                    unitMS.hitCount = 0;
+                }
+            }
+        }
         bd.TurnIndicator(true);
     }
 
@@ -379,6 +471,8 @@ public class PlayerController : MonoBehaviour
             isSpecial = false;
 
             battleMenu.SetActive(false);
+            confirmAtk.SetActive(false);
+            confirmSp.SetActive(false);
             foreach (MyUnits unit in controlledUnits)
             {
                 var uiColor = unit.unitSpriteUI.color;
@@ -431,6 +525,7 @@ public class PlayerController : MonoBehaviour
 
     public void UnitEndMove()
     {
+        battleMenu.SetActive(false);
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
         ms.EndMove();
     }
@@ -438,12 +533,13 @@ public class PlayerController : MonoBehaviour
     public void ConfirmAttack(bool accept)
     {
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+
         if (accept)
         {
-            ms.InitiateAttack();
+            attackSprite.sprite = ms.charSprite;
+            GetComponent<Animator>().SetTrigger("isAttack");
             isAttacking = false;
             confirmAtk.SetActive(false);
-
         }
         else
         {
@@ -452,19 +548,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void InitiateAttack()
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+
+        ms.InitiateAttack();
+    }
+
     public void ConfirmSpecial(bool accept)
     {
         MovementScript ms = selectedUnit.GetComponent<MovementScript>();
 
         if (accept)
         {
-            ms.InitiateSpecial();
+            specialSprite.sprite = ms.charSprite;
+            GetComponent<Animator>().SetTrigger("isSpecial");
             isSpecial = false;
             confirmSp.SetActive(false);
         } else
         {
             confirmSp.SetActive(false);
         }
+    }
+
+    public void InitiateSpecial()
+    {
+        MovementScript ms = selectedUnit.GetComponent<MovementScript>();
+
+        ms.InitiateSpecial();
     }
 
 

@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class PlayerItem : MonoBehaviourPunCallbacks
 {
+    public TMP_Text playerName;
+
     [Header("First Unit")]
     public int firstUnit;
     public TMP_Text firstUnitName;
@@ -34,6 +36,7 @@ public class PlayerItem : MonoBehaviourPunCallbacks
     {
         thisPlayer = _player;
         UpdatePlayerItem(thisPlayer);
+        playerName.text = _player.NickName;
     }
 
     // WHEN SELECTING UNITS
@@ -44,20 +47,22 @@ public class PlayerItem : MonoBehaviourPunCallbacks
             playerProperties["firstUnit"] = units.unitNumber;
             playerProperties["firstUnitName"] = units.name;
             firstUnitButton = button;
-
+            firstUnitButton.GetComponent<Button>().interactable = false;
         } else if (secondUnit == 0)
         {
             playerProperties["secondUnit"] = units.unitNumber;
             playerProperties["secondUnitName"] = units.name;
             secondUnitButton = button;
-            
-        } else if (thirdUnit == 0)
+            secondUnitButton.GetComponent<Button>().interactable = false;
+        }
+        else if (thirdUnit == 0)
         {
             playerProperties["thirdUnit"] = units.unitNumber;
             playerProperties["thirdUnitName"] = units.name;
             thirdUnitButton = button;
+            thirdUnitButton.GetComponent<Button>().interactable = false;
         }
-        
+
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
@@ -68,16 +73,18 @@ public class PlayerItem : MonoBehaviourPunCallbacks
         {
             playerProperties["thirdUnit"] = 0;
             playerProperties["thirdUnitName"] = "";
-            thirdUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            //thirdUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
             thirdUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            thirdUnitButton.GetComponent<Button>().interactable = true;
             thirdUnitButton = null;
 
         } else if (secondUnit != 0)
         {
             playerProperties["secondUnit"] = 0;
             playerProperties["secondUnitName"] = "";
-            secondUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            //secondUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
             secondUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            secondUnitButton.GetComponent<Button>().interactable = true;
             secondUnitButton = null;
 
         }
@@ -85,8 +92,9 @@ public class PlayerItem : MonoBehaviourPunCallbacks
         {
             playerProperties["firstUnit"] = 0;
             playerProperties["firstUnitName"] = "";
-            firstUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
+            //firstUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
             firstUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            firstUnitButton.GetComponent<Button>().interactable = true;
             firstUnitButton = null;
         }
 
