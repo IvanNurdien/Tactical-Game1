@@ -41,7 +41,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
 
         // ACTIVATE THIS WHEN DONE  
-        /*if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
             if (player1Ready && player2Ready)
             {
@@ -55,7 +55,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         else
         {
             startButton.SetActive(false);
-        }*/
+        }
     }
 
     // UPDATE PLAYER IN ROOM
@@ -108,8 +108,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void OnClickPlay()
     {
-        int sceneBuild = Random.Range(3, 4);
-        PhotonNetwork.LoadLevel(4);
+        int sceneBuild = Random.Range(4, 6);
+        PhotonNetwork.LoadLevel(sceneBuild);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

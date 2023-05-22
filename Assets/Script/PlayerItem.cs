@@ -45,20 +45,20 @@ public class PlayerItem : MonoBehaviourPunCallbacks
         if (firstUnit == 0)
         {
             playerProperties["firstUnit"] = units.unitNumber;
-            playerProperties["firstUnitName"] = units.name;
+            playerProperties["firstUnitName"] = units.UnitName;
             firstUnitButton = button;
             firstUnitButton.GetComponent<Button>().interactable = false;
         } else if (secondUnit == 0)
         {
             playerProperties["secondUnit"] = units.unitNumber;
-            playerProperties["secondUnitName"] = units.name;
+            playerProperties["secondUnitName"] = units.UnitName;
             secondUnitButton = button;
             secondUnitButton.GetComponent<Button>().interactable = false;
         }
         else if (thirdUnit == 0)
         {
             playerProperties["thirdUnit"] = units.unitNumber;
-            playerProperties["thirdUnitName"] = units.name;
+            playerProperties["thirdUnitName"] = units.UnitName;
             thirdUnitButton = button;
             thirdUnitButton.GetComponent<Button>().interactable = false;
         }

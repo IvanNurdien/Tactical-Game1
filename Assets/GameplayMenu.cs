@@ -85,7 +85,7 @@ public class GameplayMenu : MonoBehaviourPunCallbacks
             yield return null;
 
         PhotonNetwork.LocalPlayer.CustomProperties.Clear();
-        SceneManager.LoadScene("Loading Screen");
+        SceneManager.LoadScene("MainMenu2");
     }
 
     IEnumerator DisconnectingAfterLeave()
@@ -99,7 +99,7 @@ public class GameplayMenu : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(3f);
         PhotonNetwork.LocalPlayer.CustomProperties.Clear();
-        SceneManager.LoadScene("Loading Screen");
+        SceneManager.LoadScene("MainMenu2");
     }
 
     public override void OnPlayerLeftRoom(Player newPlayer)

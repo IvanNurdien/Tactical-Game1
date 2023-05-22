@@ -13966,6 +13966,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7718885914952398434, guid: 954b934e46d95f04dae2c2ba253aa4f2,
         type: 3}
+      propertyPath: maxCamClamp.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718885914952398434, guid: 954b934e46d95f04dae2c2ba253aa4f2,
+        type: 3}
       propertyPath: maxCamClamp.z
       value: 27.89
       objectReference: {fileID: 0}
@@ -13973,6 +13978,11 @@ PrefabInstance:
         type: 3}
       propertyPath: minCamClamp.x
       value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718885914952398434, guid: 954b934e46d95f04dae2c2ba253aa4f2,
+        type: 3}
+      propertyPath: minCamClamp.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7718885914952398434, guid: 954b934e46d95f04dae2c2ba253aa4f2,
         type: 3}
