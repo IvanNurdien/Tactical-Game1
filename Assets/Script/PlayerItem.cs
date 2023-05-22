@@ -74,7 +74,7 @@ public class PlayerItem : MonoBehaviourPunCallbacks
             playerProperties["thirdUnit"] = 0;
             playerProperties["thirdUnitName"] = "";
             //thirdUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
-            thirdUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            //thirdUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
             thirdUnitButton.GetComponent<Button>().interactable = true;
             thirdUnitButton = null;
 
@@ -83,7 +83,7 @@ public class PlayerItem : MonoBehaviourPunCallbacks
             playerProperties["secondUnit"] = 0;
             playerProperties["secondUnitName"] = "";
             //secondUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
-            secondUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            //secondUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
             secondUnitButton.GetComponent<Button>().interactable = true;
             secondUnitButton = null;
 
@@ -93,7 +93,7 @@ public class PlayerItem : MonoBehaviourPunCallbacks
             playerProperties["firstUnit"] = 0;
             playerProperties["firstUnitName"] = "";
             //firstUnitButton.GetComponent<UnitButton>().SelectedByOtherPlayer(false);
-            firstUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
+            //firstUnitButton.transform.Find("Player1Chosen").gameObject.SetActive(false);
             firstUnitButton.GetComponent<Button>().interactable = true;
             firstUnitButton = null;
         }

@@ -126,6 +126,9 @@ public class MovementScript : MonoBehaviourPun
 
     [Header("Some More Variables")]
     public Sprite charSprite;
+    public bool specialIsReady = false;
+    public int turnCount;
+    public int specialLimit = 3;
 
     private void Awake()
     {
@@ -487,6 +490,8 @@ public class MovementScript : MonoBehaviourPun
         float enemyUnitViewID;
         object[] datas;
         RaiseEventOptions raiseEventOptions;
+
+        specialLimit--;
 
         switch (specialType)
         {

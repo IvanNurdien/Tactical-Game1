@@ -17,7 +17,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public bool player1Ready;
     public bool player2Ready;
 
-    public List<GameObject> unitButtons;
+    //public List<GameObject> unitButtons;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +41,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
 
         // ACTIVATE THIS WHEN DONE  
-        /*if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
             if (player1Ready && player2Ready)
             {
@@ -51,10 +51,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 startButton.SetActive(false);
             }
-        } else
+        }
+        else
         {
             startButton.SetActive(false);
-        }*/
+        }
     }
 
     // UPDATE PLAYER IN ROOM

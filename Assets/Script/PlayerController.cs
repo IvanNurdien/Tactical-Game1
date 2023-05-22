@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public MouseSelect mouseSelect;
     public GameObject selectedUnit;
     [SerializeField] GameObject battleMenu;
+    [SerializeField] Button battleMenuSpecialButton;
     public GameObject confirmAtk;
     public GameObject confirmSp;
 
@@ -330,8 +331,15 @@ public class PlayerController : MonoBehaviour
 
         foreach (MyUnits unit in controlledUnits)
         {
-            
             MovementScript unitMS = unit.Unit.GetComponentInChildren<MovementScript>();
+            unitMS.turnCount++;
+            if (unitMS.turnCount >= 5 && unitMS.specialLimit != 0)
+            {
+                unitMS.specialIsReady = true;
+            } else
+            {
+                unitMS.specialIsReady = false;
+            }
 
             if (unitMS.isStunned)
             {
@@ -489,10 +497,16 @@ public class PlayerController : MonoBehaviour
         {
             // GET MOVEMENT SCRIPT ON SELECTED UNIT AND CHANGE STATE TO MOVE
             ms.ActionSwitch(ActionType.Move, this);
-
-            // DEACTIVATES BATTLE MENU WHEN MOVING
+            
             battleMenu.SetActive(true);
-            //mouseSelect.isPickingUnit = false;
+            if (ms.specialIsReady)
+            {
+                battleMenuSpecialButton.interactable = true;
+            } else
+            {
+                battleMenuSpecialButton.interactable = false;
+
+            }
 
             Debug.Log("Fired");
         } else
