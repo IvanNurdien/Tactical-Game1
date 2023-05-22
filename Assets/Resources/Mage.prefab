@@ -36774,6 +36774,9 @@ MonoBehaviour:
   tempSelected: {fileID: 0}
   tempDetected: {fileID: 0}
   charSprite: {fileID: 21300000, guid: f6cdd8dfd6fd8424cbcf68444a4bb8c5, type: 3}
+  specialIsReady: 0
+  turnCount: 0
+  specialLimit: 3
 --- !u!114 &3029313482243127994
 MonoBehaviour:
   m_ObjectHideFlags: 0
