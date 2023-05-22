@@ -32,18 +32,19 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
         UpdatePlayerList();
         if (PhotonNetwork.IsMasterClient)
         {
-            SpawnUnits(player1Spawn, pcOne);
+            SpawnUnits(player1Spawn, pcOne, true);
         } else
         {
-            SpawnUnits(player2Spawn, pcTwo);
+            SpawnUnits(player2Spawn, pcTwo, false);
         }
     }
 
-    public void SpawnUnits(GameObject playerSpawn, PlayerController pc)
+    public void SpawnUnits(GameObject playerSpawn, PlayerController pc, bool isPlayerOne)
     {
-        firstUnitSpawn = playerSpawn.transform.Find("Unit 1");
-        secondUnitSpawn = playerSpawn.transform.Find("Unit 2");
-        thirdUnitSpawn = playerSpawn.transform.Find("Unit 3");
+            firstUnitSpawn = playerSpawn.transform.Find("Unit 1");
+            secondUnitSpawn = playerSpawn.transform.Find("Unit 2");
+            thirdUnitSpawn = playerSpawn.transform.Find("Unit 3");
+        
 
         foreach (var unit in unitList)
         {
@@ -53,6 +54,10 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
                 Sprite unitSprite = unit.gameplaySprite;
                 float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, firstUnitSpawn.position, Quaternion.identity);
+                if (!isPlayerOne)
+                {
+                    spawnedUnit.transform.GetChild(0).rotation = Quaternion.Euler(spawnedUnit.transform.rotation.x, 180, spawnedUnit.transform.rotation.z);
+                }
                 pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }
@@ -64,6 +69,10 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
                 Sprite unitSprite = unit.gameplaySprite;
                 float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, secondUnitSpawn.position, Quaternion.identity);
+                if (!isPlayerOne)
+                {
+                    spawnedUnit.transform.GetChild(0).rotation = Quaternion.Euler(spawnedUnit.transform.rotation.x, 180, spawnedUnit.transform.rotation.z);
+                }
                 pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }
@@ -75,6 +84,10 @@ public class UnitSpawner : MonoBehaviourPunCallbacks
                 Sprite unitSprite = unit.gameplaySprite;
                 float unitHealth = unit.maxHP;
                 GameObject spawnedUnit = PhotonNetwork.Instantiate(unitToSpawn.name, thirdUnitSpawn.position, Quaternion.identity);
+                if (!isPlayerOne)
+                {
+                    spawnedUnit.transform.GetChild(0).rotation = Quaternion.Euler(spawnedUnit.transform.rotation.x, 180, spawnedUnit.transform.rotation.z);
+                }
                 pc.controlledUnits.Add(new PlayerController.MyUnits(spawnedUnit, true, unitSprite, unitHealth));
             }
         }

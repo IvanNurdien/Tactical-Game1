@@ -15,10 +15,13 @@ MonoBehaviour:
   characterPrefab: {fileID: 5867520160060264470, guid: 6822c3d768338444cae73b1d173453af,
     type: 3}
   Description: Dukun merupakan mage dengan keterampilan santet dari jarak jauh
-  UnitName: Mage
+  UnitName: Mahesa
   unitNumber: 1002
-  damage: 50
-  maxHP: 160
+  damage: 30
+  spType: 0
+  moveRange: 0
+  attackRange: 2
+  maxHP: 140
   currentHp: 50
   characterSelectSprite: {fileID: 21300000, guid: 08b00204ff02c374199e27b05b116eae,
     type: 3}

@@ -66,7 +66,7 @@ public class MovementScript : MonoBehaviourPun
     [Header("Actions and Its Variables")]
     public ActionType actionType;
     public SpecialType specialType;
-    public SpecialIndicator attackType;
+    public SpecialIndicator specialIndicator;
     public GameObject areaTp;
     public GameObject areaAtk;
     public GameObject areaSp;
@@ -74,12 +74,20 @@ public class MovementScript : MonoBehaviourPun
     [SerializeField] bool isSpecialUnlimitedRange = false;
     [SerializeField] bool isForAlly = false;
 
-
+    [Header("Unit Statuses")]
+    public GameObject stunInd;
+    public bool isStunned;
+    public int stunCounter = 2;
+    public GameObject buffInd;
+    public buffCounter unitBuffCounter;
+    public GameObject staggerInd;
+    public bool isStaggered;
+    public int hitCount;
+    public int staggeredCounter = 2;
 
     [Header("Action Amounts")]
     public specialAmount playerSpecialAmount;
     public atkDamage unitAtkDamage;
-    public buffCounter unitBuffCounter;
 
     [Header("Situations")]
     public bool canAttack = true;
@@ -104,8 +112,10 @@ public class MovementScript : MonoBehaviourPun
 
     private const byte GIVE_DAMAGE = 1;
     private const byte GIVE_BUFF = 4;
+    private const byte GIVE_STUN = 8;
     private const byte GIVE_HEAL = 2;
-
+    private const byte GIVE_ALL_BUFF = 10;
+    private const byte STAGGER = 9;
 
     [Header("Ingame-Set Variables")]
     public Rigidbody rb;
@@ -113,6 +123,12 @@ public class MovementScript : MonoBehaviourPun
     public PlayerController pc;
     public GameObject tempSelected;
     public GameObject tempDetected;
+
+    [Header("Some More Variables")]
+    public Sprite charSprite;
+    public bool specialIsReady = false;
+    public int turnCount;
+    public int specialLimit = 3;
 
     private void Awake()
     {
@@ -124,6 +140,8 @@ public class MovementScript : MonoBehaviourPun
         AttackMode();
         SpecialMode();
         UnitBuffed();
+        UnitStunned();
+        UnitStaggered();
     }
 
     private void FixedUpdate()
@@ -144,6 +162,7 @@ public class MovementScript : MonoBehaviourPun
 
     private void NetworkingClient_EventReceived(EventData obj)
     {
+        PhotonView unitView = GetComponentInParent<PhotonView>();
         // TAKE DAMAGE EVENT FROM OTHER UNITS
         if (obj.Code == GIVE_DAMAGE)
         {
@@ -152,11 +171,17 @@ public class MovementScript : MonoBehaviourPun
 
             float enemyViewID = (float)datas[2];
 
-            PhotonView unitView = this.GetComponentInParent<PhotonView>();
             // CHECK IF IM ATTACKED
             if (unitView.ViewID == enemyViewID)
             {
+                anim.SetTrigger("isHurt");
                 Debug.Log("The one hurting is " + transform.parent.name );
+                hitCount++;
+
+                if (hitCount >= 4)
+                {
+                    isStaggered = true;
+                }
             }
         } else if (obj.Code == GIVE_BUFF)
         {
@@ -165,14 +190,44 @@ public class MovementScript : MonoBehaviourPun
 
             int buffAmount = (int)datas[0];
             float allyUnitView = (float)datas[1];
+            bool givingBuff = (bool)datas[2];
 
-            PhotonView unitView = this.GetComponentInParent<PhotonView>();
             // CHECK IF ITS THE SAME UNIT
             if (unitView.ViewID == allyUnitView)
             {
-                unitBuffCounter.isBuffed = true;
+                unitBuffCounter.isBuffed = givingBuff;
                 unitBuffCounter.turnCounter = 4;
                 unitBuffCounter.buffAmount = buffAmount;
+            }
+        } else if (obj.Code == GIVE_STUN)
+        {
+            // TAKE STUN COMMAND
+            object[] datas = (object[])obj.CustomData;
+
+            float enemyViewID = (float)datas[1];
+            bool stun = (bool)datas[2];
+
+            // CHECK IF THIS UNIT IS STUNNED
+            if (unitView.ViewID == enemyViewID)
+            {
+                isStunned = stun;
+            }
+        } else if (obj.Code == STAGGER)
+        {
+            // TAKE STAGGER COMMAND
+            object[] datas = (object[])obj.CustomData;
+
+            float myViewID = (float)datas[0];
+            bool stagger = (bool)datas[1];
+
+            if (unitView.ViewID == myViewID)
+            {
+                isStaggered = stagger;
+                if (stagger == false)
+                {
+                    staggeredCounter = 2;
+                    hitCount = 0;
+                }
             }
         }
     }
@@ -206,20 +261,22 @@ public class MovementScript : MonoBehaviourPun
         areaAtk.transform.position = this.transform.position;
         areaAtk.SetActive(true);
 
-        //ARROW ROTATION
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (isPicking)
         {
-            position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+            //ARROW ROTATION
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+            }
+
+            //ARROW ROTATION
+            Quaternion transRot = Quaternion.LookRotation(position - transform.position);
+            transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
         }
-
-        //ARROW ROTATION
-        Quaternion transRot = Quaternion.LookRotation(position - transform.position);
-        transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
-        transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
-
     }
 
     void SpecialMode()
@@ -244,31 +301,18 @@ public class MovementScript : MonoBehaviourPun
                 isTargetEnemy = true;
                 break;
             case SpecialType.Buff:
-                if (isForAlly)
-                {
-                    target = this.gameObject;
-                    pc.confirmSp.SetActive(true);
-                    pc.mouseSelect.isPickingUnit = false;
-
-                }
-                else if (!isSpecialUnlimitedRange)
-                {
-                    areaSp.transform.position = this.transform.position;
-                    areaSp.SetActive(true);
-                }
-                isTargetEnemy = false;
+                isPicking = false;
+                ActionSwitch(ActionType.None, pc);
+                pc.confirmSp.SetActive(true);
                 break;
             case SpecialType.Heal:
-                int heal = Random.Range(playerSpecialAmount.baseAmount, playerSpecialAmount.maxAmount);
-                float myViewID = pc.view.ViewID;
-                object[] datas = new object[] { myViewID, heal };
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                PhotonNetwork.RaiseEvent(GIVE_HEAL, datas, raiseEventOptions, SendOptions.SendReliable);
-                EndMove();
+                isPicking = false;
+                ActionSwitch(ActionType.None, pc);
+                pc.confirmSp.SetActive(true);
                 break;
         }
 
-        if (attackType == SpecialIndicator.Arrow)
+        if (specialIndicator == SpecialIndicator.Arrow)
         {
             // ARROW TYPE ATTACK
             if (isPicking)
@@ -385,15 +429,18 @@ public class MovementScript : MonoBehaviourPun
     public void InitiateAttack()
     {
         areaAtk.SetActive(false);
-        
+
+        Quaternion transRot = Quaternion.LookRotation(target.transform.position - transform.position);
+        transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+        transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
 
         anim.SetTrigger("isAttack");
     }
 
     public void AttackUnit()
     {
-        target.GetComponent<Animator>().SetTrigger("isHurt");
-
+        //target.GetComponent<Animator>().SetTrigger("isHurt");
+        
         int baseDamage = unitAtkDamage.baseDamage;
         int maxDamage = unitAtkDamage.maxDamage;
 
@@ -406,6 +453,11 @@ public class MovementScript : MonoBehaviourPun
         // END BUFF DAMAGE
 
         int damage = Random.Range(baseDamage, maxDamage);
+        MovementScript enemyMS = target.GetComponent<MovementScript>();
+        if (enemyMS.isStaggered)
+        {
+            damage += 15;
+        }
 
         float myViewID = pc.view.ViewID;
         float enemyUnitViewID = target.transform.parent.GetComponent<PhotonView>().ViewID;
@@ -414,11 +466,17 @@ public class MovementScript : MonoBehaviourPun
         PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas, raiseEventOptions, SendOptions.SendReliable);
         EndMove();
         Debug.Log("I have attacked enemy's " + target.transform.parent.name + " with " + damage + "pts of damage");
-
     }
 
     public void InitiateSpecial()
     {
+        if (target != null)
+        {
+            Quaternion transRot = Quaternion.LookRotation(target.transform.position - transform.position);
+            transRot.eulerAngles = new Vector3(0, transRot.eulerAngles.y, transRot.eulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transRot, transform.rotation, 0f);
+        }
+        
         areaSp.SetActive(false);
 
         anim.SetTrigger("isSpecial");
@@ -433,18 +491,29 @@ public class MovementScript : MonoBehaviourPun
         object[] datas;
         RaiseEventOptions raiseEventOptions;
 
+        specialLimit--;
+
         switch (specialType)
         {
             case SpecialType.Buff:
-                areaSp.SetActive(false);
-                baseDamage = targetBuffAmount;
-                enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
-                datas = new object[] { baseDamage, enemyUnitViewID };
-                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                PhotonNetwork.RaiseEvent(GIVE_BUFF, datas, raiseEventOptions, SendOptions.SendReliable);
-
-
-                Debug.Log(target.transform.parent.name + " is buffed!");
+                if (specialIndicator == SpecialIndicator.All)
+                {
+                    baseDamage = targetBuffAmount;
+                    myViewID = pc.view.ViewID;
+                    datas = new object[] { baseDamage, myViewID };
+                    raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    PhotonNetwork.RaiseEvent(GIVE_ALL_BUFF, datas, raiseEventOptions, SendOptions.SendReliable);
+                    Debug.Log("I have Buffed ALL!");
+                }
+                else
+                {
+                    baseDamage = targetBuffAmount;
+                    enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
+                    datas = new object[] { baseDamage, enemyUnitViewID };
+                    raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    PhotonNetwork.RaiseEvent(GIVE_BUFF, datas, raiseEventOptions, SendOptions.SendReliable);
+                    Debug.Log(target.transform.parent.name + " is buffed!");
+                }
                 EndMove();
                 break;
 
@@ -485,6 +554,8 @@ public class MovementScript : MonoBehaviourPun
                 break;
 
             case SpecialType.Damage_T:
+                target.GetComponent<Animator>().SetTrigger("isHurt");
+
                 areaSp.SetActive(false);
                 baseDamage = playerSpecialAmount.baseAmount;
                 maxDamage = playerSpecialAmount.maxAmount;
@@ -507,6 +578,37 @@ public class MovementScript : MonoBehaviourPun
                 PhotonNetwork.RaiseEvent(GIVE_DAMAGE, datas, raiseEventOptions, SendOptions.SendReliable);
                 EndMove();
                 break;
+            case SpecialType.Heal:
+                int heal = Random.Range(playerSpecialAmount.baseAmount, playerSpecialAmount.maxAmount);
+                myViewID = pc.view.ViewID;
+                datas = new object[] { myViewID, heal };
+                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(GIVE_HEAL, datas, raiseEventOptions, SendOptions.SendReliable);
+                EndMove();
+                break;
+            case SpecialType.Stun:
+                myViewID = pc.view.ViewID;
+                enemyUnitViewID = target.GetComponentInParent<PhotonView>().ViewID;
+                bool stun = true;
+                datas = new object[] { myViewID, enemyUnitViewID, stun };
+
+                raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                PhotonNetwork.RaiseEvent(GIVE_STUN, datas, raiseEventOptions, SendOptions.SendReliable);
+                EndMove();
+                break;
+        }
+    }
+
+    void UnitStunned()
+    {
+        if (isStunned)
+        {
+            stunInd.SetActive(true);
+            sc.isPlayed = true;
+        } else
+        {
+            stunInd.SetActive(false);
+            stunCounter = 2;
         }
     }
 
@@ -514,14 +616,23 @@ public class MovementScript : MonoBehaviourPun
     {
         if (unitBuffCounter.isBuffed)
         {
-            // Activates something
+            buffInd.SetActive(true);
         } else
         {
-            // Deactivates something
+            buffInd.SetActive(false);
         }
     }
 
-
+    void UnitStaggered()
+    {
+        if (isStaggered)
+        {
+            staggerInd.SetActive(true);
+        } else
+        {
+            staggerInd.SetActive(false);
+        }
+    }
 
     void MoveUnitRelativeToCamera()
     {

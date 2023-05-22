@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -19,13 +20,15 @@ public class BattleDirector : MonoBehaviour
     PlayerTurn nowTurn;
 
     PhotonView view;
+    public float assignedPlayerID;
 
     public TMP_Text turnIndicator;
 
-    public GameObject LoseScreen;
-    public GameObject WinScreen;
+    public GameObject loseScreen;
+    public GameObject winScreen;
+    public GameObject overlayCam;
 
-    private const byte WIN_CONDITION = 10;
+    private const byte WIN_CONDITION = 20;
 
     
     // Start is called before the first frame update
@@ -38,6 +41,8 @@ public class BattleDirector : MonoBehaviour
         }*/
         view = GetComponent<PhotonView>();
 
+        
+
         if (PhotonNetwork.IsMasterClient)
         {
             yield return new WaitForSeconds(5f);
@@ -45,6 +50,18 @@ public class BattleDirector : MonoBehaviour
 
             view.RPC("RPC_SetPlayerTurn", RpcTarget.AllBuffered);
         }
+
+        /*if (playerTwo.view.IsMine)
+        {
+            assignedPlayerID = playerTwo.view.ViewID;
+            Debug.Log("You are player 2");
+        }
+        else if (playerOne.view.IsMine)
+        {
+            assignedPlayerID = playerOne.view.ViewID;
+            Debug.Log("You are player 1");
+
+        }*/
 
     }
 
@@ -62,14 +79,22 @@ public class BattleDirector : MonoBehaviour
     {
         if (obj.Code == WIN_CONDITION)
         {
-            WinScreen.SetActive(true);
+            object[] datas = (object[])obj.CustomData;
+            float enemyViewID = (float)datas[0];
+
+            if (assignedPlayerID != enemyViewID)
+            {
+                winScreen.SetActive(true);
+                loseScreen.SetActive(false);
+            }
         }
     }
 
-    public void PlayerLose()
+    public void PlayerLose(float playerViewID)
     {
-        LoseScreen.SetActive(true);
-        float myViewID = view.ViewID;
+        overlayCam.SetActive(true);
+        loseScreen.SetActive(true);
+        float myViewID = playerViewID;
         object[] datas = new object[] { myViewID };
 
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
